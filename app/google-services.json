@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "161408097840",
+    "firebase_url": "https://gymbuddy-a1579.firebaseio.com",
+    "project_id": "gymbuddy-a1579",
+    "storage_bucket": "gymbuddy-a1579.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:161408097840:android:90d9e784891f9dc6",
+        "android_client_info": {
+          "package_name": "gymbuddy.project.capstone.gymbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "161408097840-4fgo3iep9dclcjm239t82lbopdidpla3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gymbuddy.project.capstone.gymbuddy",
+            "certificate_hash": "002d0f349c734d35a1f5c638757e7f4477ced13f"
+          }
+        },
+        {
+          "client_id": "161408097840-l3k643m4ba9jt7qlck8h2rkc5iqc1akf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNjEKWeK0jjl-XLFF1Mzx5dJWZKbwxGW8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "161408097840-l3k643m4ba9jt7qlck8h2rkc5iqc1akf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
