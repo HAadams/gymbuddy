@@ -23,6 +23,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
 
 
@@ -73,7 +74,7 @@ public class LoginFragment extends Fragment {
 
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = rootView.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions("email", "public_profile", "user_birthday", "user_photos");
         loginButton.setFragment(this);
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -103,7 +104,7 @@ public class LoginFragment extends Fragment {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
+    private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         System.out.println("getActivit() returns");
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -114,17 +115,20 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            // Toast.makeText(getActivity(), "Authentication TWORKED.",
-                            //         Toast.LENGTH_SHORT).show();
-                            // FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
+                            FirebaseDatabaseHelper helper = FirebaseDatabaseHelper.getInstance();
+                            helper.setAccessToken(token);
+                            helper.setFirebaseUser(firebaseAuth.getCurrentUser());
+                            try {
+                                helper.UpdateUserData();
+                            }catch(Exception e){
+                                Log.e(TAG, e.toString());
+                            }
+
                             updateUI();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            // Toast.makeText(getActivity(), "Authentication failed.",
-                            //         Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+
                         }
 
                         // ...

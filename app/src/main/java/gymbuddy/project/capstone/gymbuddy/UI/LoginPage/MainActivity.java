@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 
+import com.firebase.client.Firebase;
+
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.Adapters.FragmentSelectionPageAdapter;
 import gymbuddy.project.capstone.gymbuddy.UI.Fragments.LoginFragment;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(fragmentAdapter);
 
+        Firebase.setAndroidContext(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
