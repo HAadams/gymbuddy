@@ -116,10 +116,8 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseDatabaseHelper helper = FirebaseDatabaseHelper.getInstance();
-                            helper.setAccessToken(token);
-                            helper.setFirebaseUser(firebaseAuth.getCurrentUser());
                             try {
-                                helper.UpdateUserData();
+                                helper.UploadUserDataToDatabase(firebaseAuth.getCurrentUser(), token);
                             }catch(Exception e){
                                 Log.e(TAG, e.toString());
                             }

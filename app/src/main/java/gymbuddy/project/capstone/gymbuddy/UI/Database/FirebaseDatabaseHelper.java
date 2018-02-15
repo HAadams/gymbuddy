@@ -22,13 +22,7 @@ public class FirebaseDatabaseHelper {
     private boolean fetchComplete;
     private boolean errorOccured;
     private Firebase rootRef;
-
-    private FirebaseUser user;
-    AccessToken accessToken;
-
-    String birthday;
-    String gender;
-    String email;
+    private CurrentUser currentUser;
 
     private static FirebaseDatabaseHelper initialInstance = null;
 
@@ -41,31 +35,34 @@ public class FirebaseDatabaseHelper {
     }
 
     FirebaseDatabaseHelper(){
-        user = null;
-        accessToken = null;
         fetchComplete = false;
         errorOccured = false;
-
+        currentUser = CurrentUser.getInstance();
     }
 
-    public void setFirebaseUser(FirebaseUser user){
-        this.user = user;
-    }
-
-    public void setAccessToken(AccessToken accessToken){
-        this.accessToken = accessToken;
-    }
-
-    public void UpdateUserData() throws NullUserTokensException {
+    public void UploadUserDataToDatabase(FirebaseUser user, AccessToken accessToken) throws NullUserTokensException{
         if(user == null || accessToken == null)
             throw new NullUserTokensException("FirebaseUser and AccessToken inside UserProfileDBHelper cannot be null.");
 
-        FetchUserData();
+        currentUser.user = user;
+        currentUser.accessToken = accessToken;
+        currentUser.name = user.getDisplayName();
+        currentUser.email = user.getEmail();
+        FetchCurrentUserData(accessToken);
         new UserDataUpdater().execute();
 
     }
 
-    public void FetchUserData() throws NullUserTokensException{
+    public User[] DownloadAllUserData(){
+        /*
+
+        Helper function to download all users in the database and return an array of some sorts.
+
+         */
+        return new User[1];
+    }
+
+    private void FetchCurrentUserData(AccessToken accessToken) throws NullUserTokensException{
         if(accessToken == null)
             throw new NullUserTokensException("AccessToken cannot be null inside UserProfileDBHelper");
 
@@ -76,20 +73,18 @@ public class FirebaseDatabaseHelper {
                     public void onCompleted(
                             JSONObject object,
                             GraphResponse response) {
-                        System.out.println(object.toString());
                         try {
-                            birthday = object.getString("birthday");
-                            gender = object.getString("gender");
-                            email = object.getString("email");
+                            currentUser.birthday = object.getString(currentUser.BIRTHDAY);
+                            currentUser.gender = object.getString(currentUser.GENDER);
                             fetchComplete = true;
                         }catch(Exception e){
                             System.out.println(e.toString());
                             fetchComplete = false;
                             errorOccured = true;
                         }
-
                     }
                 });
+
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,name,link,gender,birthday,email");
         request.setParameters(parameters);
@@ -111,12 +106,14 @@ public class FirebaseDatabaseHelper {
 
             rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
 
-            Firebase userRef = rootRef.child(user.getUid());
-            userRef.setValue(user.getDisplayName());
-            userRef.child("Birthday").setValue(birthday);
-            userRef.child("Gender").setValue(gender);
-            userRef.child("Email").setValue(email);
-
+            Firebase userRef = rootRef.child(currentUser.user.getUid());
+            userRef.setValue(currentUser.user.getDisplayName());
+            userRef.child(currentUser.NAME).setValue(currentUser.name);
+            userRef.child(currentUser.BIRTHDAY).setValue(currentUser.birthday);
+            userRef.child(currentUser.GENDER).setValue(currentUser.gender);
+            userRef.child(currentUser.EMAIL).setValue(currentUser.email);
+            errorOccured = false;
+            fetchComplete = false;
         }
     }
 
