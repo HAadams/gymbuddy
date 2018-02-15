@@ -1,6 +1,7 @@
-package gymbuddy.project.capstone.gymbuddy.UI.Fragments;
+package gymbuddy.project.capstone.gymbuddy.UI.LoginPage;
 
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -25,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
+import gymbuddy.project.capstone.gymbuddy.UI.Maps.LocationHelper;
 
 
 public class LoginFragment extends Fragment {
@@ -36,6 +39,8 @@ public class LoginFragment extends Fragment {
     private CallbackManager mCallbackManager;
     private final String TAG = "FACEBOOK_AUTH_LOGGER";
     private FirebaseAuth firebaseAuth;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
 
     public LoginFragment() {
@@ -123,6 +128,7 @@ public class LoginFragment extends Fragment {
                             }
 
                             updateUI();
+                            new LocationHelper(getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

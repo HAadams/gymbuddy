@@ -15,6 +15,8 @@ public class User {
     final String GENDER = "gender";
     final String BIRTHDAY = "birthday";
     final String EMAIL = "email";
+    final String LATITUDE = "latitude";
+    final String LONGITUDE = "longitude";
     final String NAME = "name";
 
 
@@ -22,6 +24,8 @@ public class User {
     String gender;
     String email;
     String name;
+    String longitude;
+    String latitude;
 
     User(){}
 

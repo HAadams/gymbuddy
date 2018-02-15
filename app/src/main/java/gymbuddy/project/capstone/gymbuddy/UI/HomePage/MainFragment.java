@@ -1,4 +1,4 @@
-package gymbuddy.project.capstone.gymbuddy.UI.Fragments;
+package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

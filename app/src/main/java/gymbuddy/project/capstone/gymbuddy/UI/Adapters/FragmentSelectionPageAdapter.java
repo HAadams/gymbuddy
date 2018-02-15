@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import gymbuddy.project.capstone.gymbuddy.UI.Fragments.LoginFragment;
-import gymbuddy.project.capstone.gymbuddy.UI.Fragments.MainFragment;
+import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.LoginFragment;
+import gymbuddy.project.capstone.gymbuddy.UI.HomePage.MainFragment;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

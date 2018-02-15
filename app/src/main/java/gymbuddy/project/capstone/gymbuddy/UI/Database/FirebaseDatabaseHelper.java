@@ -23,6 +23,7 @@ public class FirebaseDatabaseHelper {
     private boolean errorOccured;
     private Firebase rootRef;
     private CurrentUser currentUser;
+    private Firebase userRef;
 
     private static FirebaseDatabaseHelper initialInstance = null;
 
@@ -38,6 +39,7 @@ public class FirebaseDatabaseHelper {
         fetchComplete = false;
         errorOccured = false;
         currentUser = CurrentUser.getInstance();
+        rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
     }
 
     public void UploadUserDataToDatabase(FirebaseUser user, AccessToken accessToken) throws NullUserTokensException{
@@ -92,6 +94,17 @@ public class FirebaseDatabaseHelper {
         request.executeAsync();
     }
 
+    public void updateLatitudeLocation(Double latitude){
+        currentUser.latitude = latitude.toString();;
+        rootRef.child(currentUser.user.getUid()).child(currentUser.LATITUDE).setValue(currentUser.latitude);
+
+    }
+
+    public void updateLongitudeLocation(Double longitude){
+        currentUser.longitude = longitude.toString();
+        rootRef.child(currentUser.user.getUid()).child(currentUser.LONGITUDE).setValue(currentUser.longitude);
+    }
+
     private class UserDataUpdater extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -104,10 +117,8 @@ public class FirebaseDatabaseHelper {
             super.onPostExecute(aVoid);
             if(errorOccured) return;
 
-            rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
-
-            Firebase userRef = rootRef.child(currentUser.user.getUid());
-            userRef.setValue(currentUser.user.getDisplayName());
+            userRef = rootRef.child(currentUser.user.getUid());
+            //userRef.setValue(currentUser.user.getDisplayName());
             userRef.child(currentUser.NAME).setValue(currentUser.name);
             userRef.child(currentUser.BIRTHDAY).setValue(currentUser.birthday);
             userRef.child(currentUser.GENDER).setValue(currentUser.gender);

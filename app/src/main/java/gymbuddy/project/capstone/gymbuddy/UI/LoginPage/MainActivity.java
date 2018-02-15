@@ -20,7 +20,6 @@ import com.firebase.client.Firebase;
 
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.Adapters.FragmentSelectionPageAdapter;
-import gymbuddy.project.capstone.gymbuddy.UI.Fragments.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
