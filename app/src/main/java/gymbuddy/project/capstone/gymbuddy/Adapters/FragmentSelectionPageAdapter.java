@@ -1,4 +1,4 @@
-package gymbuddy.project.capstone.gymbuddy.UI.Adapters;
+package gymbuddy.project.capstone.gymbuddy.Adapters;
 
 /**
  * Created by Sein on 2/15/18.

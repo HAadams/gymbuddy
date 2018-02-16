@@ -25,9 +25,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.UI.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
-import gymbuddy.project.capstone.gymbuddy.UI.Maps.LocationHelper;
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 
 
 public class LoginFragment extends Fragment {

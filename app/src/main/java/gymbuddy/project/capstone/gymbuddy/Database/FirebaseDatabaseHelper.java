@@ -1,4 +1,4 @@
-package gymbuddy.project.capstone.gymbuddy.UI.Database;
+package gymbuddy.project.capstone.gymbuddy.Database;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONObject;
+
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 
 /**
  * Created by Sein on 2/15/18.

@@ -1,10 +1,10 @@
-package gymbuddy.project.capstone.gymbuddy.UI.Database;
+package gymbuddy.project.capstone.gymbuddy.Database;
 
 /**
  * Created by Sein on 2/15/18.
  */
 
-public class CurrentUser extends User{
+public class CurrentUser extends User {
 
     private static CurrentUser initialInstance = null;
 
