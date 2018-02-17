@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
@@ -25,6 +27,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        LocationHelper.getInstance(HomeActivity.this).requestLocationPermission();
+
         mSwipeView = (SwipePlaceHolderView)findViewById(R.id.swipeView);
         mContext = getApplicationContext();
 
@@ -35,8 +39,8 @@ public class HomeActivity extends AppCompatActivity {
                         .setRelativeScale(0.01f)
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
-Utils utils = new Utils();
-       List<Profile> arrayList = Utils.loadProfiles(mContext);
+        Utils utils = new Utils();
+        List<Profile> arrayList = Utils.loadProfiles(mContext);
         for(int i = 0 ; i<arrayList.size(); i++){
             mSwipeView.addView(new TinderCard(mContext, arrayList.get(i), mSwipeView));
         }
@@ -59,5 +63,12 @@ Utils utils = new Utils();
             }
         });
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            LocationHelper.getInstance(this).updateUserLocation();
+        }
     }
+}
 

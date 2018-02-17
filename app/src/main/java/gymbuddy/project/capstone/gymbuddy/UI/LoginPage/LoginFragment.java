@@ -24,10 +24,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
-import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 
 
 public class LoginFragment extends Fragment {
@@ -51,17 +51,12 @@ public class LoginFragment extends Fragment {
      * number.
      */
     public static LoginFragment newInstance() {
-//        LoginFragment fragment = new LoginFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//        fragment.setArguments(args);
         return new LoginFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        // Initialize Firebase Auth
     }
 
     @Override
@@ -69,10 +64,6 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView;
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
 
         // Initialize Facebook Login button
         firebaseAuth = FirebaseAuth.getInstance();
@@ -111,7 +102,12 @@ public class LoginFragment extends Fragment {
 
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-        System.out.println("getActivit() returns");
+
+        if(getActivity() == null){
+            Log.d(getClass().toString(), "Got null for getActivity()");
+            return;
+        }
+
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -120,31 +116,20 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseDatabaseHelper helper = FirebaseDatabaseHelper.getInstance();
-                            try {
-                                helper.UploadUserDataToDatabase(firebaseAuth.getCurrentUser(), token);
-                            }catch(Exception e){
-                                Log.e(TAG, e.toString());
-                            }
 
-                            updateUI();
-                            new LocationHelper(getActivity());
+                            ((MainActivity)getActivity()).updateUserData(token);
+                            ((MainActivity)getActivity()).startHomePageActivity();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
 
                         }
-
-                        // ...
                     }
                 });
     }
 
-    public void updateUI(){
-        Log.w(TAG, "updateUI:non-null_user");
-        Intent accountIntent = new Intent(getActivity(), HomeActivity.class);
-        startActivity(accountIntent);
-    }
+
 
 }
 

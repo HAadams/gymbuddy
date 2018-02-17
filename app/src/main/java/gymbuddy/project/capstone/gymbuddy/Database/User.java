@@ -3,14 +3,13 @@ package gymbuddy.project.capstone.gymbuddy.Database;
 import com.facebook.AccessToken;
 import com.google.firebase.auth.FirebaseUser;
 
+import android.net.Uri;
+
 /**
  * Created by Sein on 2/15/18.
  */
 
 public class User {
-    FirebaseUser user;
-    AccessToken accessToken;
-
     final String FEMALE = "female";
     final String GENDER = "gender";
     final String BIRTHDAY = "birthday";
@@ -18,6 +17,7 @@ public class User {
     final String LATITUDE = "latitude";
     final String LONGITUDE = "longitude";
     final String NAME = "name";
+    final String PROFILE_PIC = "profile_picture";
 
 
     String birthday;
@@ -26,6 +26,7 @@ public class User {
     String name;
     String longitude;
     String latitude;
+    Uri photoURL;
 
     User(){}
 

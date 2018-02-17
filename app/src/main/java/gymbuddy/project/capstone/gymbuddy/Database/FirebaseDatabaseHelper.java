@@ -7,25 +7,26 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONObject;
 
-import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
-
 /**
  * Created by Sein on 2/15/18.
- */
+ **/
 
 public class FirebaseDatabaseHelper {
 
-    final String FIREBASE_DATABASE_URL_USERS = "https://gymbuddy-a1579.firebaseio.com/Users";
+    private final String FIREBASE_DATABASE_URL_USERS = "https://gymbuddy-a1579.firebaseio.com/Users";
 
     private boolean fetchComplete;
     private boolean errorOccured;
     private Firebase rootRef;
-    private CurrentUser currentUser;
+    public User currentUser;
     private Firebase userRef;
+    private FirebaseUser user;
+    AccessToken accessToken;
 
     private static FirebaseDatabaseHelper initialInstance = null;
 
@@ -37,21 +38,25 @@ public class FirebaseDatabaseHelper {
         return initialInstance;
     }
 
-    FirebaseDatabaseHelper(){
+    private FirebaseDatabaseHelper(){
         fetchComplete = false;
         errorOccured = false;
-        currentUser = CurrentUser.getInstance();
+        currentUser = new User();
         rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public void UploadUserDataToDatabase(FirebaseUser user, AccessToken accessToken) throws NullUserTokensException{
+    public void setAccessToken(AccessToken accessToken){
+        this.accessToken = accessToken;
+    }
+
+    public void UploadUserDataToDatabase() throws NullUserTokensException{
         if(user == null || accessToken == null)
             throw new NullUserTokensException("FirebaseUser and AccessToken inside UserProfileDBHelper cannot be null.");
 
-        currentUser.user = user;
-        currentUser.accessToken = accessToken;
         currentUser.name = user.getDisplayName();
         currentUser.email = user.getEmail();
+        currentUser.photoURL = user.getPhotoUrl();
         FetchCurrentUserData(accessToken);
         new UserDataUpdater().execute();
 
@@ -92,19 +97,17 @@ public class FirebaseDatabaseHelper {
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,name,link,gender,birthday,email");
         request.setParameters(parameters);
-
         request.executeAsync();
     }
 
     public void updateLatitudeLocation(Double latitude){
         currentUser.latitude = latitude.toString();;
-        rootRef.child(currentUser.user.getUid()).child(currentUser.LATITUDE).setValue(currentUser.latitude);
-
+        rootRef.child(user.getUid()).child(currentUser.LATITUDE).setValue(currentUser.latitude);
     }
 
     public void updateLongitudeLocation(Double longitude){
         currentUser.longitude = longitude.toString();
-        rootRef.child(currentUser.user.getUid()).child(currentUser.LONGITUDE).setValue(currentUser.longitude);
+        rootRef.child(user.getUid()).child(currentUser.LONGITUDE).setValue(currentUser.longitude);
     }
 
     private class UserDataUpdater extends AsyncTask<Void, Void, Void> {
@@ -119,12 +122,12 @@ public class FirebaseDatabaseHelper {
             super.onPostExecute(aVoid);
             if(errorOccured) return;
 
-            userRef = rootRef.child(currentUser.user.getUid());
-            //userRef.setValue(currentUser.user.getDisplayName());
+            userRef = rootRef.child(user.getUid());
             userRef.child(currentUser.NAME).setValue(currentUser.name);
             userRef.child(currentUser.BIRTHDAY).setValue(currentUser.birthday);
             userRef.child(currentUser.GENDER).setValue(currentUser.gender);
             userRef.child(currentUser.EMAIL).setValue(currentUser.email);
+            userRef.child(currentUser.PROFILE_PIC).setValue(currentUser.photoURL.toString());
             errorOccured = false;
             fetchComplete = false;
         }

@@ -2,6 +2,7 @@ package gymbuddy.project.capstone.gymbuddy.UI.LoginPage;
 
 
 import android.content.Intent;
+import android.location.LocationListener;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +12,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 
+import com.facebook.AccessToken;
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.Adapters.FragmentSelectionPageAdapter;
+import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,11 +45,12 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
+    LocationHelper lh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Firebase.setAndroidContext(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
         // primary sections of the activity.
         fragmentAdapter = new FragmentSelectionPageAdapter(getSupportFragmentManager());
 
+        LocationHelper.getInstance(this).requestLocationPermission();
+
+
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(fragmentAdapter);
-
-        Firebase.setAndroidContext(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
     }
 
     @Override
@@ -83,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -96,6 +105,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            startHomePageActivity();
+            LocationHelper.getInstance(this).updateUserLocation();
+        }
+    }
+
+    public void updateUserData(AccessToken accessToken){
+        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+        try {
+            fdbh.setAccessToken(accessToken);
+            fdbh.UploadUserDataToDatabase();
+            LocationHelper.getInstance(this).updateUserLocation();
+        }catch(Exception e){
+            Log.e(getClass().toString(), e.toString());
+        }
+    }
+
+    public void startHomePageActivity(){
+        Log.w(getClass().toString(), "startHomepageActivity:starting Homepage activity");
+        Intent accountIntent = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(accountIntent);
     }
 
 }
