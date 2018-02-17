@@ -26,6 +26,7 @@ public class User {
     String name;
     String longitude;
     String latitude;
+    String userID;
     Uri photoURL;
 
     User(){}

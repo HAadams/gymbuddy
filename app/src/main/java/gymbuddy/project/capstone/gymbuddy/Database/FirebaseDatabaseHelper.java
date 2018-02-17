@@ -43,7 +43,6 @@ public class FirebaseDatabaseHelper {
         errorOccured = false;
         currentUser = new User();
         rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
-        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void setAccessToken(AccessToken accessToken){
@@ -51,9 +50,11 @@ public class FirebaseDatabaseHelper {
     }
 
     public void UploadUserDataToDatabase() throws NullUserTokensException{
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null || accessToken == null)
             throw new NullUserTokensException("FirebaseUser and AccessToken inside UserProfileDBHelper cannot be null.");
 
+        currentUser.userID = user.getUid();
         currentUser.name = user.getDisplayName();
         currentUser.email = user.getEmail();
         currentUser.photoURL = user.getPhotoUrl();
@@ -102,12 +103,12 @@ public class FirebaseDatabaseHelper {
 
     public void updateLatitudeLocation(Double latitude){
         currentUser.latitude = latitude.toString();;
-        rootRef.child(user.getUid()).child(currentUser.LATITUDE).setValue(currentUser.latitude);
+        rootRef.child(currentUser.userID).child(currentUser.LATITUDE).setValue(currentUser.latitude);
     }
 
     public void updateLongitudeLocation(Double longitude){
         currentUser.longitude = longitude.toString();
-        rootRef.child(user.getUid()).child(currentUser.LONGITUDE).setValue(currentUser.longitude);
+        rootRef.child(currentUser.userID).child(currentUser.LONGITUDE).setValue(currentUser.longitude);
     }
 
     private class UserDataUpdater extends AsyncTask<Void, Void, Void> {
@@ -122,7 +123,7 @@ public class FirebaseDatabaseHelper {
             super.onPostExecute(aVoid);
             if(errorOccured) return;
 
-            userRef = rootRef.child(user.getUid());
+            userRef = rootRef.child(currentUser.userID);
             userRef.child(currentUser.NAME).setValue(currentUser.name);
             userRef.child(currentUser.BIRTHDAY).setValue(currentUser.birthday);
             userRef.child(currentUser.GENDER).setValue(currentUser.gender);
