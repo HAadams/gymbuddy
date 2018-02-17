@@ -87,6 +87,7 @@ public class LocationHelper implements android.location.LocationListener{
 
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             requestLocationPermission();
+            return null;
         }
 
         if(NetworkEnabled) locationProvider = LocationManager.NETWORK_PROVIDER;

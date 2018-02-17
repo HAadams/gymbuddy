@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
         // primary sections of the activity.
         fragmentAdapter = new FragmentSelectionPageAdapter(getSupportFragmentManager());
 
-        LocationHelper.getInstance(this).requestLocationPermission();
-
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(fragmentAdapter);
@@ -115,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
         // Also, update the user location
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             startHomePageActivity();
-            LocationHelper.getInstance(this).updateUserLocation();
         }
     }
 
@@ -125,8 +121,6 @@ public class MainActivity extends AppCompatActivity {
             // Set the access token to access the user's profile data
             fdbh.setAccessToken(accessToken);
             fdbh.UploadUserDataToDatabase();
-            // Update the user's location after they login
-            LocationHelper.getInstance(this).updateUserLocation();
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());
         }
