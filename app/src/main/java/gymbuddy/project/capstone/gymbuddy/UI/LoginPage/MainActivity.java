@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
+        // After user re-opens the app, check if they were logged in
+        // If they were logged in, take them straight to the HomeActivity
+        // Also, update the user location
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             startHomePageActivity();
             LocationHelper.getInstance(this).updateUserLocation();
@@ -119,8 +122,10 @@ public class MainActivity extends AppCompatActivity {
     public void updateUserData(AccessToken accessToken){
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         try {
+            // Set the access token to access the user's profile data
             fdbh.setAccessToken(accessToken);
             fdbh.UploadUserDataToDatabase();
+            // Update the user's location after they login
             LocationHelper.getInstance(this).updateUserLocation();
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());

@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
         }
     }
