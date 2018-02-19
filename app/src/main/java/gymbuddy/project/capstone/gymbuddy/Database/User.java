@@ -29,12 +29,12 @@ public class User {
     //Contains set of albums in the form of <ID, NAME>
     public HashMap<String, String> albums;
     //Contains the list of pictures inside each album
-    public ArrayList<String> photos;
+    public HashMap<String, ArrayList<String>> photos;
     Uri photoURL;
 
     User(){
         albums = new HashMap<String, String>();
-        photos = new ArrayList<String>();
+        photos = new HashMap<String, ArrayList<String>>();
     }
 
     public boolean isFemale(){

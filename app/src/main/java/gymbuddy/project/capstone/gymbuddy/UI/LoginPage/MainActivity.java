@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());
         }
-//        new PhotosAPI().fetchPicturesFromAllAlbums();
+        PhotosAPI.getInstance().fetchMeStuff();
     }
 
     public void startHomePageActivity(){

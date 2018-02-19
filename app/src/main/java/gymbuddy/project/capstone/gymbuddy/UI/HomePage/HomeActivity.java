@@ -91,7 +91,6 @@ public class HomeActivity extends AppCompatActivity {
             Intent accountIntent = new Intent(HomeActivity.this, MainActivity.class);
             startActivity(accountIntent);
             finish();
-
         }
     }
 }

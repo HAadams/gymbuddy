@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Sein on 2/15/18.
  **/
@@ -29,6 +31,8 @@ public class FirebaseDatabaseHelper {
     public final String NAME = "name";
     public final String PROFILE_PIC = "profile_picture";
     public final String ID = "id";
+    public final String PHOTOS = "photos";
+
     private String picture_url = "https://graph.facebook.com/photo_id/picture?access_token=token_id";
 
     private boolean fetchComplete;
@@ -101,10 +105,11 @@ public class FirebaseDatabaseHelper {
                             currentUser.gender = object.getString(GENDER);
                             currentUser.fbUserID = object.getString(ID);
                             JSONArray array = object.getJSONObject("albums").getJSONArray("data");
-                            for(int i=0; i<array.length(); i++)
+                            for(int i=0; i<array.length(); i++) {
                                 currentUser.albums.put(
                                         array.getJSONObject(i).get(ID).toString(),
                                         array.getJSONObject(i).get(NAME).toString());
+                            }
 
                             fetchComplete = true;
                         }catch(Exception e){
@@ -139,34 +144,38 @@ public class FirebaseDatabaseHelper {
 
     public void updateUserPhotos(){
         userRef = rootRef.child(user.getUid());
-        Firebase picRef = userRef.child(currentUser.albums.get(currentUser.photos.get(0)));
-        for(String pic: currentUser.photos)
-            picRef.child(pic).setValue(picture_url.replace("photo_id", pic).replace("token_id", accessToken.getToken()));
+        Firebase picRef = userRef.child(PHOTOS);
+        Firebase inRef;
+        for(String album: currentUser.albums.keySet()) {
+            inRef = picRef.child(currentUser.albums.get(album));
+            for(String pic: currentUser.photos.get(album))
+                inRef.child(pic).setValue(picture_url.replace("photo_id", pic).replace("token_id", accessToken.getToken()));
+        }
     }
+    private boolean isErrorOccured(){return errorOccured;}
 
-    private class UserDataUpdater extends AsyncTask<Void, Void, Void> {
+    private static class UserDataUpdater extends AsyncTask<Void, Void, Void> {
+        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+        Firebase userRef = fdbh.rootRef.child(fdbh.user.getUid());
+
         @Override
         protected Void doInBackground(Void... voids) {
-            while(!fetchComplete && !errorOccured){}
+            while(!fdbh.isFetchComplete() && !fdbh.isErrorOccured()){}
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(errorOccured) {
-                // reset and return
-                errorOccured = false;
+            if(fdbh.isErrorOccured()) {
+                Log.e("UserDataUpdater", "Error occurred in graph request that updates user data.");
                 return;
             }
-
-            userRef = rootRef.child(user.getUid());
-            userRef.child(NAME).setValue(currentUser.name);
-            userRef.child(BIRTHDAY).setValue(currentUser.birthday);
-            userRef.child(GENDER).setValue(currentUser.gender);
-            userRef.child(EMAIL).setValue(currentUser.email);
-            userRef.child(PROFILE_PIC).setValue(currentUser.photoURL.toString());
-            errorOccured = false;
+            userRef.child(fdbh.NAME).setValue(fdbh.currentUser.name);
+            userRef.child(fdbh.BIRTHDAY).setValue(fdbh.currentUser.birthday);
+            userRef.child(fdbh.GENDER).setValue(fdbh.currentUser.gender);
+            userRef.child(fdbh.EMAIL).setValue(fdbh.currentUser.email);
+            userRef.child(fdbh.PROFILE_PIC).setValue(fdbh.currentUser.photoURL.toString());
         }
     }
 
