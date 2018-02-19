@@ -12,8 +12,12 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+    </com.mindorks.placeholderview.SwipePlaceHolderView>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline5"
@@ -87,4 +91,15 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1" />
 
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="27dp"
+        android:text="O"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.846"
+        app:layout_constraintStart_toEndOf="@+id/rejectBtn" />
 </android.support.constraint.ConstraintLayout>

@@ -2,6 +2,7 @@ package gymbuddy.project.capstone.gymbuddy.Database;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -10,6 +11,7 @@ import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -19,6 +21,15 @@ import org.json.JSONObject;
 public class FirebaseDatabaseHelper {
 
     private final String FIREBASE_DATABASE_URL_USERS = "https://gymbuddy-a1579.firebaseio.com/Users";
+    public final String GENDER = "gender";
+    public final String BIRTHDAY = "birthday";
+    public final String EMAIL = "email";
+    public final String LATITUDE = "latitude";
+    public final String LONGITUDE = "longitude";
+    public final String NAME = "name";
+    public final String PROFILE_PIC = "profile_picture";
+    public final String ID = "id";
+    private String picture_url = "https://graph.facebook.com/photo_id/picture?access_token=token_id";
 
     private boolean fetchComplete;
     private boolean errorOccured;
@@ -26,7 +37,7 @@ public class FirebaseDatabaseHelper {
     public User currentUser;
     private Firebase userRef;
     private FirebaseUser user;
-    AccessToken accessToken;
+    private AccessToken accessToken;
 
     private static FirebaseDatabaseHelper initialInstance = null;
 
@@ -48,7 +59,8 @@ public class FirebaseDatabaseHelper {
     public void setAccessToken(AccessToken accessToken){
         this.accessToken = accessToken;
     }
-
+    public String getAccessToken(){return accessToken.getToken();}
+    public boolean isFetchComplete(){return fetchComplete;}
     public void UploadUserDataToDatabase() throws NullUserTokensException{
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null || accessToken == null)
@@ -74,6 +86,8 @@ public class FirebaseDatabaseHelper {
     private void FetchCurrentUserData(AccessToken accessToken) throws NullUserTokensException{
         if(accessToken == null)
             throw new NullUserTokensException("AccessToken cannot be null inside UserProfileDBHelper");
+        fetchComplete = false;
+        errorOccured = false;
 
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
@@ -83,11 +97,19 @@ public class FirebaseDatabaseHelper {
                             JSONObject object,
                             GraphResponse response) {
                         try {
-                            currentUser.birthday = object.getString(currentUser.BIRTHDAY);
-                            currentUser.gender = object.getString(currentUser.GENDER);
+                            currentUser.birthday = object.getString(BIRTHDAY);
+                            currentUser.gender = object.getString(GENDER);
+                            currentUser.fbUserID = object.getString(ID);
+                            JSONArray array = object.getJSONObject("albums").getJSONArray("data");
+                            for(int i=0; i<array.length(); i++)
+                                currentUser.albums.put(
+                                        array.getJSONObject(i).get(ID).toString(),
+                                        array.getJSONObject(i).get(NAME).toString());
+
                             fetchComplete = true;
                         }catch(Exception e){
-                            System.out.println(e.toString());
+                            Log.e(getClass().toString(), "Error fetching user information");
+                            Log.e(getClass().getName(), e.toString());
                             fetchComplete = false;
                             errorOccured = true;
                         }
@@ -95,7 +117,8 @@ public class FirebaseDatabaseHelper {
                 });
 
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,link,gender,birthday,email");
+        // The information the request will fetch is defined in parameters
+        parameters.putString("fields", "id,name,link,gender,birthday,email,albums");
         request.setParameters(parameters);
         request.executeAsync();
     }
@@ -104,14 +127,21 @@ public class FirebaseDatabaseHelper {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.latitude = latitude.toString();;
-        rootRef.child(user.getUid()).child(currentUser.LATITUDE).setValue(currentUser.latitude);
+        rootRef.child(user.getUid()).child(LATITUDE).setValue(currentUser.latitude);
     }
 
     public void updateLongitudeLocation(Double longitude){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.longitude = longitude.toString();
-        rootRef.child(user.getUid()).child(currentUser.LONGITUDE).setValue(currentUser.longitude);
+        rootRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.longitude);
+    }
+
+    public void updateUserPhotos(){
+        userRef = rootRef.child(user.getUid());
+        Firebase picRef = userRef.child(currentUser.albums.get(currentUser.photos.get(0)));
+        for(String pic: currentUser.photos)
+            picRef.child(pic).setValue(picture_url.replace("photo_id", pic).replace("token_id", accessToken.getToken()));
     }
 
     private class UserDataUpdater extends AsyncTask<Void, Void, Void> {
@@ -124,16 +154,19 @@ public class FirebaseDatabaseHelper {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(errorOccured) return;
+            if(errorOccured) {
+                // reset and return
+                errorOccured = false;
+                return;
+            }
 
             userRef = rootRef.child(user.getUid());
-            userRef.child(currentUser.NAME).setValue(currentUser.name);
-            userRef.child(currentUser.BIRTHDAY).setValue(currentUser.birthday);
-            userRef.child(currentUser.GENDER).setValue(currentUser.gender);
-            userRef.child(currentUser.EMAIL).setValue(currentUser.email);
-            userRef.child(currentUser.PROFILE_PIC).setValue(currentUser.photoURL.toString());
+            userRef.child(NAME).setValue(currentUser.name);
+            userRef.child(BIRTHDAY).setValue(currentUser.birthday);
+            userRef.child(GENDER).setValue(currentUser.gender);
+            userRef.child(EMAIL).setValue(currentUser.email);
+            userRef.child(PROFILE_PIC).setValue(currentUser.photoURL.toString());
             errorOccured = false;
-            fetchComplete = false;
         }
     }
 

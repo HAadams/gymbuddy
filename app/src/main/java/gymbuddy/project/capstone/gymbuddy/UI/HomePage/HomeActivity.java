@@ -1,10 +1,14 @@
 package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
@@ -14,6 +18,7 @@ import java.util.List;
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
 public class HomeActivity extends AppCompatActivity {
@@ -60,6 +65,16 @@ public class HomeActivity extends AppCompatActivity {
                 mSwipeView.doSwipe(true);
             }
         });
+
+        Button logout = findViewById(R.id.logoutButton);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                startMainActivity();
+            }
+        });
     }
     @Override
     public void onResume(){
@@ -67,6 +82,16 @@ public class HomeActivity extends AppCompatActivity {
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
+        }
+    }
+
+    private void startMainActivity(){
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
+            Intent accountIntent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(accountIntent);
+            finish();
+
         }
     }
 }

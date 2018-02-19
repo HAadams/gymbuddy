@@ -2,7 +2,6 @@ package gymbuddy.project.capstone.gymbuddy.UI.LoginPage;
 
 
 import android.content.Intent;
-import android.location.LocationListener;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +26,7 @@ import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.Adapters.FragmentSelectionPageAdapter;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
+import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -124,12 +124,14 @@ public class MainActivity extends AppCompatActivity {
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());
         }
+//        new PhotosAPI().fetchPicturesFromAllAlbums();
     }
 
     public void startHomePageActivity(){
         Log.w(getClass().toString(), "startHomepageActivity:starting Homepage activity");
         Intent accountIntent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(accountIntent);
+        finish();
     }
 
 }
