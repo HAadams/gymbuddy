@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
+
 /**
  * Created by Sein on 2/15/18.
  */
@@ -18,28 +20,24 @@ import java.util.Map;
 public class User {
     final String FEMALE = "female";
 
-    String birthday;
-    String gender;
-    String email;
-    String name;
-    String longitude;
-    String latitude;
-    String fbUserID;
-
-    //Contains set of albums in the form of <ID, NAME>
-    public HashMap<String, String> albums;
-    //Contains the list of pictures inside each album
-    public HashMap<String, ArrayList<String>> photos;
+    public String birthday;
+    public String gender;
+    public String email;
+    public String name;
+    public String longitude;
+    public String latitude;
+    public String fbUserID;
+    public List<Album> albums;
     Uri photoURL;
 
     User(){
-        albums = new HashMap<String, String>();
-        photos = new HashMap<String, ArrayList<String>>();
+        albums = new ArrayList<>();
     }
 
     public boolean isFemale(){
         return gender.equalsIgnoreCase(FEMALE);
     }
+
 }
 
 

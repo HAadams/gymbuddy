@@ -16,6 +16,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
+
 /**
  * Created by Sein on 2/15/18.
  **/
@@ -33,7 +36,6 @@ public class FirebaseDatabaseHelper {
     public final String ID = "id";
     public final String PHOTOS = "photos";
 
-    private String picture_url = "https://graph.facebook.com/photo_id/picture?access_token=token_id";
 
     private boolean fetchComplete;
     private boolean errorOccured;
@@ -63,7 +65,7 @@ public class FirebaseDatabaseHelper {
     public void setAccessToken(AccessToken accessToken){
         this.accessToken = accessToken;
     }
-    public String getAccessToken(){return accessToken.getToken();}
+    public AccessToken getAccessToken(){return accessToken;}
     public boolean isFetchComplete(){return fetchComplete;}
     public void UploadUserDataToDatabase() throws NullUserTokensException{
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -104,13 +106,6 @@ public class FirebaseDatabaseHelper {
                             currentUser.birthday = object.getString(BIRTHDAY);
                             currentUser.gender = object.getString(GENDER);
                             currentUser.fbUserID = object.getString(ID);
-                            JSONArray array = object.getJSONObject("albums").getJSONArray("data");
-                            for(int i=0; i<array.length(); i++) {
-                                currentUser.albums.put(
-                                        array.getJSONObject(i).get(ID).toString(),
-                                        array.getJSONObject(i).get(NAME).toString());
-                            }
-
                             fetchComplete = true;
                         }catch(Exception e){
                             Log.e(getClass().toString(), "Error fetching user information");
@@ -123,7 +118,7 @@ public class FirebaseDatabaseHelper {
 
         Bundle parameters = new Bundle();
         // The information the request will fetch is defined in parameters
-        parameters.putString("fields", "id,name,link,gender,birthday,email,albums");
+        parameters.putString("fields", "id,name,link,gender,birthday,email");
         request.setParameters(parameters);
         request.executeAsync();
     }
@@ -146,10 +141,10 @@ public class FirebaseDatabaseHelper {
         userRef = rootRef.child(user.getUid());
         Firebase picRef = userRef.child(PHOTOS);
         Firebase inRef;
-        for(String album: currentUser.albums.keySet()) {
-            inRef = picRef.child(currentUser.albums.get(album));
-            for(String pic: currentUser.photos.get(album))
-                inRef.child(pic).setValue(picture_url.replace("photo_id", pic).replace("token_id", accessToken.getToken()));
+        for(Album album: currentUser.albums) {
+            inRef = picRef.child(album.getID());
+            for(Photo pic: album.getPictures())
+                inRef.child(pic.getID()).setValue(pic.getURL());
         }
     }
     private boolean isErrorOccured(){return errorOccured;}

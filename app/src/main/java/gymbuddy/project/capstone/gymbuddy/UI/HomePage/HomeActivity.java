@@ -18,7 +18,10 @@ import java.util.List;
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsSelectAdapter;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.PictureSelectActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
+import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
 public class HomeActivity extends AppCompatActivity {
@@ -75,7 +78,17 @@ public class HomeActivity extends AppCompatActivity {
                 startMainActivity();
             }
         });
+        Button photos = findViewById(R.id.uploadPicsButton);
+        photos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PhotosAPI.getInstance().getAllUserAlbumsAndPhotos();
+
+                startFBPhotosSelectActivity();
+            }
+        });
     }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -89,6 +102,15 @@ public class HomeActivity extends AppCompatActivity {
         if(FirebaseAuth.getInstance().getCurrentUser() == null){
             Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
             Intent accountIntent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(accountIntent);
+            finish();
+        }
+    }
+    private void startFBPhotosSelectActivity(){
+
+        if(!(FirebaseAuth.getInstance().getCurrentUser() == null)){
+            Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
+            Intent accountIntent = new Intent(HomeActivity.this, PictureSelectActivity.class);
             startActivity(accountIntent);
             finish();
         }
