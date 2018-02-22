@@ -18,18 +18,20 @@ public class Photo {
     public Photo(String id, String url){
         this.id = id;
         this.url = url;
-        try {
-            URL imageURL = new URL(url);
-
-
-
-            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-            this.bitmap = bitmap;
-            
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            URL imageURL = new URL(url);
+//
+//
+//
+//            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+//            bitmap.setHeight(100);
+//            bitmap.setWidth(100);
+//            this.bitmap = bitmap;
+//
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     public Bitmap getBitmap(){return bitmap;}

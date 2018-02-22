@@ -24,7 +24,7 @@ public class PhotosAPI {
 
     private AccessToken access_token;
     private JSONArray response;
-    FirebaseDatabaseHelper firebaseDatabaseHelper;
+    public FirebaseDatabaseHelper firebaseDatabaseHelper;
     private boolean fetchComplete;
     private boolean albumsFetchComplete;
     private boolean errorOccured;
@@ -49,7 +49,7 @@ public class PhotosAPI {
 
     }
 
-    void fetchPhotosFromAlbum(final String album_id, final int album_positionٍ){
+    public void fetchPhotosFromAlbum(final String album_id, final int album_positionٍ){
         assert access_token != null;
         fetchComplete = false;
         if(firebaseDatabaseHelper.currentUser.albums.size() == 0){
@@ -97,19 +97,19 @@ public class PhotosAPI {
     }
 
     public void getAllUserAlbumsAndPhotos(){
-        fetchUserAlbums(access_token);
-        new AsyncPicturesFetcher().execute();
+        //fetchUserAlbums(access_token);
+        //new AsyncPicturesFetcher().execute();
     }
-    private boolean isFetchComplete(){return fetchComplete;}
-    private boolean isAlbumsFetchComplete(){return albumsFetchComplete;}
-    private boolean isErrorOccured(){return errorOccured;}
+    public boolean isFetchComplete(){return fetchComplete;}
+    public boolean isAlbumsFetchComplete(){return albumsFetchComplete;}
+    public boolean isErrorOccured(){return errorOccured;}
 
-    void fetchUserAlbums(AccessToken accessToken) {
+    public void fetchUserAlbums() {
         albumsFetchComplete = false;
         errorOccured = false;
 
         GraphRequest request = GraphRequest.newMeRequest(
-                accessToken,
+                firebaseDatabaseHelper.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(
@@ -121,6 +121,7 @@ public class PhotosAPI {
                                 firebaseDatabaseHelper.currentUser.albums.add(new Album(
                                         array.getJSONObject(i).get(firebaseDatabaseHelper.ID).toString(),
                                        array.getJSONObject(i).get(firebaseDatabaseHelper.NAME).toString()));
+
                             }
 
                             albumsFetchComplete = true;
@@ -141,26 +142,4 @@ public class PhotosAPI {
         request.executeAsync();
     }
 
-
-    static class AsyncPicturesFetcher extends AsyncTask<Void, Void, Void>{
-        PhotosAPI helper = PhotosAPI.getInstance();
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            while(!helper.isAlbumsFetchComplete()){
-                if(helper.isErrorOccured()){
-                    Log.e(getClass().toString(), "Error occurred while fetching user albums");
-                    return null;
-                }
-            }
-            for(int i=0; i<helper.firebaseDatabaseHelper.currentUser.albums.size(); i++){
-                helper.fetchPhotosFromAlbum(helper.firebaseDatabaseHelper.currentUser.albums.get(i).getID(), i);
-                while(!helper.isFetchComplete()){}
-            }
-            helper.firebaseDatabaseHelper.updateUserPhotos();
-            return null;
-        }
-
-
-    }
 }

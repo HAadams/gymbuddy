@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.squareup.picasso.Picasso;
+
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -46,6 +48,9 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
     public void onBindViewHolder(AlbumCardViewHolder holder, int position) {
         Album album = albums.get(position);
         holder.album_name.setText(album.getName());
+        Picasso.with(context)
+                .load(albums.get(position).getPictures().get(0).getURL()).into(holder.logo);
+
         try{
             holder.logo.setImageBitmap(album.getPictures().get(0).getBitmap());
         }catch(Exception e){e.printStackTrace();}
