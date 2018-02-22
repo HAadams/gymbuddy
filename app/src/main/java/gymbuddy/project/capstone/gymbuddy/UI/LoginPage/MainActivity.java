@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
 
 
+
+
+    //
+
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
