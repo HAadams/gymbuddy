@@ -32,8 +32,9 @@ public class PictureSelectActivity extends AppCompatActivity {
         adapter = new AlbumsSelectAdapter(this, albumList);
         adapter.notifyDataSetChanged();
         rv.setAdapter(adapter);
-
+        FirebaseDatabaseHelper.getInstance().currentUser.clearAlbums();
         getUserAlbums();
+
     }
 
     public void getUserAlbums(){

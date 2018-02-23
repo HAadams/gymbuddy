@@ -38,6 +38,8 @@ public class User {
         return gender.equalsIgnoreCase(FEMALE);
     }
 
+    public void clearAlbums(){albums.clear();}
+
 }
 
 

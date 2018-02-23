@@ -82,8 +82,6 @@ public class HomeActivity extends AppCompatActivity {
         photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PhotosAPI.getInstance().getAllUserAlbumsAndPhotos();
-
                 startFBPhotosSelectActivity();
             }
         });

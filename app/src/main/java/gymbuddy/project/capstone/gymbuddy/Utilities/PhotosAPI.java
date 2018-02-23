@@ -83,13 +83,11 @@ public class PhotosAPI {
         });
     }
 
-    public void getAllUserAlbumsAndPhotos(){
-        //fetchUserAlbums(access_token);
-        //new AsyncPicturesFetcher().execute();
-    }
     public boolean isFetchComplete(){return fetchComplete;}
     public boolean isAlbumsFetchComplete(){return albumsFetchComplete;}
     public boolean isErrorOccured(){return errorOccured;}
+
+
 
     public void fetchUserAlbums() {
         albumsFetchComplete = false;
