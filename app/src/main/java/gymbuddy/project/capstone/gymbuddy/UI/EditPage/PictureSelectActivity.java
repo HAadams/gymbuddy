@@ -18,7 +18,7 @@ import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 public class PictureSelectActivity extends AppCompatActivity {
     static AlbumsSelectAdapter adapter;
     RecyclerView rv;
-    PhotosAPI helper = PhotosAPI.getInstance();
+    PhotosAPI photosHelper = PhotosAPI.getInstance();
 
     List<Album> albumList;
     @Override
@@ -33,15 +33,15 @@ public class PictureSelectActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         rv.setAdapter(adapter);
 
-        getAllUserAlbumsAndPhotos();
+        getUserAlbums();
     }
 
-    public void getAllUserAlbumsAndPhotos(){
-        helper.fetchUserAlbums();
-        new AsyncPicturesFetcher().execute();
+    public void getUserAlbums(){
+        photosHelper.fetchUserAlbums();
+        new AlbumsFetchedChecker().execute();
     }
 
-    static class AsyncPicturesFetcher extends AsyncTask<Void, Void, Void>{
+    static class AlbumsFetchedChecker extends AsyncTask<Void, Void, Void>{
         PhotosAPI helper = PhotosAPI.getInstance();
 
         @Override
@@ -52,10 +52,7 @@ public class PictureSelectActivity extends AppCompatActivity {
                     return null;
                 }
             }
-            for(int i=0; i<helper.firebaseDatabaseHelper.currentUser.albums.size(); i++){
-                helper.fetchPhotosFromAlbum(helper.firebaseDatabaseHelper.currentUser.albums.get(i).getID(), i);
-                while(!helper.isFetchComplete()){}
-            }
+
             return null;
         }
 

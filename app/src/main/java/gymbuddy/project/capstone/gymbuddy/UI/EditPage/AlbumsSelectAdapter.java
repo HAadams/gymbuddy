@@ -1,9 +1,6 @@
 package gymbuddy.project.capstone.gymbuddy.UI.EditPage;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +10,6 @@ import android.widget.TextView;
 
 
 import com.squareup.picasso.Picasso;
-
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
@@ -49,11 +43,8 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
         Album album = albums.get(position);
         holder.album_name.setText(album.getName());
         Picasso.with(context)
-                .load(albums.get(position).getPictures().get(0).getURL()).into(holder.logo);
+                .load(albums.get(position).getLogoPicture().getURL()).into(holder.logo);
 
-        try{
-            holder.logo.setImageBitmap(album.getPictures().get(0).getBitmap());
-        }catch(Exception e){e.printStackTrace();}
     }
 
     @Override

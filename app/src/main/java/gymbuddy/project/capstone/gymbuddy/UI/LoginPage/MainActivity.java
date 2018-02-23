@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         try {
             // Set the access token to access the user's profile data
-            fdbh.setAccessToken(accessToken);
             fdbh.UploadUserDataToDatabase();
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());

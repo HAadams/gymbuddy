@@ -43,7 +43,6 @@ public class FirebaseDatabaseHelper {
     public User currentUser;
     private Firebase userRef;
     private FirebaseUser user;
-    private AccessToken accessToken;
 
     private static FirebaseDatabaseHelper initialInstance = null;
 
@@ -62,41 +61,25 @@ public class FirebaseDatabaseHelper {
         rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
     }
 
-    public void setAccessToken(AccessToken accessToken){
-        this.accessToken = accessToken;
-    }
-    public AccessToken getAccessToken(){return accessToken;}
     public boolean isFetchComplete(){return fetchComplete;}
-    public void UploadUserDataToDatabase() throws NullUserTokensException{
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null || accessToken == null)
-            throw new NullUserTokensException("FirebaseUser and AccessToken inside UserProfileDBHelper cannot be null.");
 
+    public void UploadUserDataToDatabase(){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
         currentUser.name = user.getDisplayName();
         currentUser.email = user.getEmail();
         currentUser.photoURL = user.getPhotoUrl();
-        FetchCurrentUserData(accessToken);
+        FetchCurrentUserData();
         new UserDataUpdater().execute();
 
     }
 
-    public User[] DownloadAllUserData(){
-        /*
-
-        Helper function to download all users in the database and return an array of some sorts.
-
-         */
-        return new User[1];
-    }
-
-    private void FetchCurrentUserData(AccessToken accessToken) throws NullUserTokensException{
-        if(accessToken == null)
-            throw new NullUserTokensException("AccessToken cannot be null inside UserProfileDBHelper");
+    private void FetchCurrentUserData(){
         fetchComplete = false;
         errorOccured = false;
 
         GraphRequest request = GraphRequest.newMeRequest(
-                accessToken,
+                AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(
@@ -171,12 +154,6 @@ public class FirebaseDatabaseHelper {
             userRef.child(fdbh.GENDER).setValue(fdbh.currentUser.gender);
             userRef.child(fdbh.EMAIL).setValue(fdbh.currentUser.email);
             userRef.child(fdbh.PROFILE_PIC).setValue(fdbh.currentUser.photoURL.toString());
-        }
-    }
-
-    class NullUserTokensException extends Exception{
-        NullUserTokensException(String msg){
-            super(msg);
         }
     }
 }
