@@ -24,7 +24,7 @@ public class PhotosAPI {
 
     private JSONArray response;
     public FirebaseDatabaseHelper firebaseDatabaseHelper;
-    private boolean fetchComplete;
+    private boolean photosFetchComplete;
     private boolean albumsFetchComplete;
     private boolean errorOccured;
 
@@ -40,14 +40,14 @@ public class PhotosAPI {
 
 
     PhotosAPI(){
-        fetchComplete = false;
+        photosFetchComplete = false;
         errorOccured = false;
         albumsFetchComplete = false;
         firebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
     }
 
     public void fetchPhotosFromAlbum(final String album_id, final int album_positionٍ){
-        fetchComplete = false;
+        photosFetchComplete = false;
         if(firebaseDatabaseHelper.currentUser.albums.size() == 0){
             Log.e(getClass().toString(), "No albums found to fetch pictures from");
             return;
@@ -66,11 +66,11 @@ public class PhotosAPI {
                                 new Photo(response.getJSONObject(i).get(firebaseDatabaseHelper.ID).toString())
                         );
                     }
-                    fetchComplete = true;
+                    photosFetchComplete = true;
                 }catch(Exception e){
                     Log.e(getClass().getName(), "Error parsing get request responseBody");
                     e.printStackTrace();
-                    fetchComplete = false;
+                    photosFetchComplete = false;
                 }
 
             }
@@ -78,12 +78,12 @@ public class PhotosAPI {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.e(getClass().getName(), "Error sending GET request");
-                fetchComplete = false;
+                photosFetchComplete = false;
             }
         });
     }
 
-    public boolean isFetchComplete(){return fetchComplete;}
+    public boolean isPhotosFetchComplete(){return photosFetchComplete;}
     public boolean isAlbumsFetchComplete(){return albumsFetchComplete;}
     public boolean isErrorOccured(){return errorOccured;}
 
@@ -140,7 +140,7 @@ public class PhotosAPI {
             }
             for(int i=0; i<helper.firebaseDatabaseHelper.currentUser.albums.size(); i++){
                 helper.fetchPhotosFromAlbum(helper.firebaseDatabaseHelper.currentUser.albums.get(i).getID(), i);
-                while(!helper.isFetchComplete()){}
+                while(!helper.isPhotosFetchComplete()){}
             }
             return null;
         }

@@ -16,7 +16,7 @@ import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 
 public class PictureSelectActivity extends AppCompatActivity {
-    static AlbumsSelectAdapter adapter;
+    AlbumsSelectAdapter adapter;
     RecyclerView rv;
     PhotosAPI photosHelper = PhotosAPI.getInstance();
 
@@ -39,11 +39,13 @@ public class PictureSelectActivity extends AppCompatActivity {
 
     public void getUserAlbums(){
         photosHelper.fetchUserAlbums();
-        new AlbumsFetchedChecker().execute();
+        new AlbumsFetchedChecker(adapter).execute();
     }
 
     static class AlbumsFetchedChecker extends AsyncTask<Void, Void, Void>{
         PhotosAPI helper = PhotosAPI.getInstance();
+        AlbumsSelectAdapter adapter;
+        AlbumsFetchedChecker(AlbumsSelectAdapter adapter){this.adapter = adapter;}
 
         @Override
         protected Void doInBackground(Void... voids) {
