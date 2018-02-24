@@ -18,10 +18,8 @@ import java.util.List;
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsSelectAdapter;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.PictureSelectActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
-import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
 public class HomeActivity extends AppCompatActivity {

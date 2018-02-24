@@ -1,4 +1,4 @@
-package gymbuddy.project.capstone.gymbuddy.Utilities;
+package gymbuddy.project.capstone.gymbuddy.UI.EditPage;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,8 +15,6 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
 
 
 public class PhotosAPI {

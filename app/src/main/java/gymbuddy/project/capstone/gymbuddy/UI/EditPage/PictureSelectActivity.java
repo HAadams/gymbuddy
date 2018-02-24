@@ -1,6 +1,5 @@
 package gymbuddy.project.capstone.gymbuddy.UI.EditPage;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +10,7 @@ import android.util.Log;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
-import gymbuddy.project.capstone.gymbuddy.Network.NetworkCallback;
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 
 public class PictureSelectActivity extends AppCompatActivity {
 

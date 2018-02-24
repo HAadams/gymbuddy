@@ -6,9 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -36,7 +34,6 @@ import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
-import gymbuddy.project.capstone.gymbuddy.Utilities.PhotosAPI;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
-        
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,11 +142,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void updateUserData(AccessToken accessToken){
-        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+    public void updateUserData(){
         try {
             // Set the access token to access the user's profile data
-            fdbh.UploadUserDataToDatabase();
+            FirebaseDatabaseHelper.getInstance().UploadUserDataToDatabase();
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());
         }
@@ -157,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void startHomePageActivity(){
         Log.w(getClass().toString(), "startHomepageActivity:starting Homepage activity");
-        Intent accountIntent = new Intent(MainActivity.this, HomeActivity.class);
-        startActivity(accountIntent);
+        Intent homepageActivity = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(homepageActivity);
         finish();
     }
 
@@ -173,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            updateUserData(token);
+                            updateUserData();
                             startHomePageActivity();
 
                         } else {
