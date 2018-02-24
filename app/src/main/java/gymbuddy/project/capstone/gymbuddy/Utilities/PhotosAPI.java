@@ -87,8 +87,6 @@ public class PhotosAPI {
     public boolean isAlbumsFetchComplete(){return albumsFetchComplete;}
     public boolean isErrorOccured(){return errorOccured;}
 
-
-
     public void fetchUserAlbums() {
         albumsFetchComplete = false;
         errorOccured = false;
