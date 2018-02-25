@@ -3,12 +3,16 @@ package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.login.LoginFragment;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
@@ -22,10 +26,12 @@ import gymbuddy.project.capstone.gymbuddy.UI.EditPage.PictureSelectActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
 
-    private SwipePlaceHolderView mSwipeView;
-    private Context mContext;
+    Context context;
+
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
 
 
     @Override
@@ -33,56 +39,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mSwipeView = (SwipePlaceHolderView)findViewById(R.id.swipeView);
-        mContext = getApplicationContext();
+        context = this;
 
-        mSwipeView.getBuilder()
-                .setDisplayViewCount(5)
-                .setSwipeDecor(new SwipeDecor()
-                        .setPaddingTop(20)
-                        .setRelativeScale(0.01f)
-                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
-                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
-        Utils utils = new Utils();
-        List<Profile> arrayList = Utils.loadProfiles(mContext);
-        for(int i = 0 ; i<arrayList.size(); i++){
-            mSwipeView.addView(new TinderCard(mContext, arrayList.get(i), mSwipeView));
-        }
+        fragmentManager = getSupportFragmentManager();
 
-//        for(Profile profile : Utils.loadProfiles(mContext)){
-//            mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
-//        }
+        fragmentTransaction = fragmentManager.beginTransaction();
 
-        findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSwipeView.doSwipe(false);
-            }
-        });
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 
-        findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSwipeView.doSwipe(true);
-            }
-        });
+        fragmentTransaction.replace(R.id.homeFragmentContainer, new HomeFragment()).addToBackStack(null);
 
-        Button logout = findViewById(R.id.logoutButton);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                LoginManager.getInstance().logOut();
-                startMainActivity();
-            }
-        });
-        Button photos = findViewById(R.id.uploadPicsButton);
-        photos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startFBPhotosSelectActivity();
-            }
-        });
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -110,6 +77,40 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(accountIntent);
             finish();
         }
+    }
+
+    @Override
+    public void onLogoutFragmentInteraction() {
+        startMainActivity();
+    }
+
+    @Override
+    public void onPhotosFragmentInteraction() {
+        startFBPhotosSelectActivity();
+    }
+
+    @Override
+    public void onMessengerFragmentInteraction() {
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+
+        fragmentTransaction.replace(R.id.homeFragmentContainer, new MessengerFragment()).addToBackStack(null);
+
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    public void onMapFragmentInteraction() {
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+
+        fragmentTransaction.replace(R.id.homeFragmentContainer, new SupportMapFragment()).addToBackStack(null);
+
+        fragmentTransaction.commit();
+
     }
 }
 
