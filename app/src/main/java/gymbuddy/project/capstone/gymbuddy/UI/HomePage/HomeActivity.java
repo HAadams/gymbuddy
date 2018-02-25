@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     public void onMessengerFragmentInteraction() {
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.setCustomAnimations(R.anim.exit, R.anim.enter, R.anim.pop_exit, R.anim.pop_enter);
 
         fragmentTransaction.replace(R.id.homeFragmentContainer, new MessengerFragment()).addToBackStack(null);
 
