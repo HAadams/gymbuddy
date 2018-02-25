@@ -9,6 +9,8 @@
     android:fitsSystemWindows="true"
     tools:context="gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity">
 
+
+
     <android.support.v4.view.ViewPager
         android:id="@+id/slideContainer"
         android:layout_width="wrap_content"
@@ -25,33 +27,38 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/dotLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/slideContainer" />
 
-    <TextView
+    <Button
         android:id="@+id/PrevButton"
-        android:layout_width="86dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:text="Previous"
-        android:textSize="18sp"
+        android:textColor="@color/com_facebook_button_background_color_focused"
+        android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <TextView
+    <Button
         android:id="@+id/NextButton"
         android:layout_width="86dp"
         android:layout_height="55dp"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:text="Next"
-        android:textSize="18sp"
+        android:textColor="@color/com_facebook_button_background_color_focused"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/dotLayout"
         android:layout_width="70dp"
         android:layout_height="48dp"
         android:layout_marginBottom="16dp"

@@ -7,7 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import com.facebook.AccessToken;
@@ -37,8 +42,16 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
 
     private SlideAdapter slideAdapter;
+    private LinearLayout dotLayout;
+    private TextView[] dots;
     private ViewPager mViewPager;
     LocationHelper lh;
+
+    private Button prevButton;
+    private Button nextButton;
+    LoginButton loginButton;
+
+    private int currentPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +60,39 @@ public class MainActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
 
         mViewPager = findViewById(R.id.slideContainer);
+        dotLayout = findViewById(R.id.dotLayout);
 
         slideAdapter = new SlideAdapter(this);
 
+        loginButton.setVisibility(View.INVISIBLE);
+
         mViewPager.setAdapter(slideAdapter);
 
+        addDotIndicator(0);
+
+        mViewPager.addOnPageChangeListener(viewListener);
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    mViewPager.setCurrentItem(currentPage+1);
+            }
+        });
+
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(currentPage-1);
+
+            }
+        });
 
 
         // Initialize Facebook Login button
         firebaseAuth = FirebaseAuth.getInstance();
 
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.login_button);
+        loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_birthday", "user_photos");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -81,6 +115,63 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public void addDotIndicator(int position){
+        dots = new TextView[3];
+
+        for (int i = 0; i < dots.length; i++){
+
+            dots[i] = new TextView(this);
+            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setTextSize(35);
+            dots[i].setTextColor(getResources().getColor(R.color.colorGrey));
+
+            dotLayout.addView(dots[i]);
+
+        }
+
+        if(dots.length>0){
+            dots[position].setTextColor(getResources().getColor(R.color.colorWhite));
+        }
+
+    }
+
+    ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+                addDotIndicator(position);
+                currentPage = position;
+
+                if (position == 1){
+                    nextButton.setEnabled(true);
+                    prevButton.setEnabled(false);
+                    prevButton.setVisibility(View.INVISIBLE);
+                }else if (position == dots.length){
+                    nextButton.setEnabled(false);
+                    prevButton.setEnabled(true);
+                    loginButton.setVisibility(View.VISIBLE);
+                    nextButton.setVisibility(View.INVISIBLE);
+                } else{
+                    nextButton.setEnabled(true);
+                    prevButton.setEnabled(true);
+                    nextButton.setVisibility(View.VISIBLE);
+                    prevButton.setVisibility(View.INVISIBLE);
+                }
+
+
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 
     @Override
