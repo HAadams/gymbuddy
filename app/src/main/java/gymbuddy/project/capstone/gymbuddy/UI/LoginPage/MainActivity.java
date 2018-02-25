@@ -59,8 +59,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
 
+        loginButton = findViewById(R.id.login_button);
+
         mViewPager = findViewById(R.id.slideContainer);
         dotLayout = findViewById(R.id.dotLayout);
+        nextButton = findViewById(R.id.NextButton);
+        prevButton = findViewById(R.id.PrevButton);
 
         slideAdapter = new SlideAdapter(this);
 
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         mCallbackManager = CallbackManager.Factory.create();
-        loginButton = findViewById(R.id.login_button);
+
         loginButton.setReadPermissions("email", "public_profile", "user_birthday", "user_photos");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
