@@ -70,7 +70,6 @@ public class SlideAdapter extends PagerAdapter {
         TextView summary =  view.findViewById(R.id.animationSummary);
 
         animationView.setAnimation(slide_anims[position]);
-        animationView.loop(false);
         animationView.playAnimation();
 
         header.setText(slide_heading[position]);

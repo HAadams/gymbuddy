@@ -15,7 +15,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="hello-world.json"
         app:lottie_loop="true" />
 
     <TextView
