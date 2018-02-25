@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.MessengerFragment.OnListFragmentInteractionListener;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.dummy.DummyContent.DummyItem;
 
