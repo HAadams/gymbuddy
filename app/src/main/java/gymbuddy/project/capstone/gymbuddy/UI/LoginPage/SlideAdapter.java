@@ -29,9 +29,9 @@ public class SlideAdapter extends PagerAdapter {
     }
 
     public String[] slide_anims = {
-            "heart_animation.json",
+            "anim1.json",
             "map_animation.json",
-            "loading.json"
+            "anim2.json"
     };
 
     public String[] slide_heading = {
