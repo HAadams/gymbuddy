@@ -158,13 +158,14 @@ public class MainActivity extends AppCompatActivity {
                 }else if (position == dots.length){
                     nextButton.setEnabled(false);
                     prevButton.setEnabled(true);
-                    loginButton.setVisibility(View.VISIBLE);
                     nextButton.setVisibility(View.INVISIBLE);
                 } else{
                     nextButton.setEnabled(true);
                     prevButton.setEnabled(true);
                     nextButton.setVisibility(View.VISIBLE);
                     prevButton.setVisibility(View.INVISIBLE);
+                    loginButton.setVisibility(View.VISIBLE);
+
                 }
 
 
