@@ -67,6 +67,6 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/NextButton"
-        app:layout_constraintStart_toEndOf="@+id/PrevButton"></LinearLayout>
+        app:layout_constraintStart_toEndOf="@+id/PrevButton"/>
 
 </android.support.constraint.ConstraintLayout>
