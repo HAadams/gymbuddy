@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(slideAdapter);
 
-        initDotIndicator(0);
+        initDotIndicator();
 
         mViewPager.addOnPageChangeListener(viewListener);
 
@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void initDotIndicator(int position){
+    public void initDotIndicator(){
         dots = new TextView[3];
-
+        // Set all the TextViews to default parameters
         for (int i = 0; i < dots.length; i++){
 
             dots[i] = new TextView(this);
@@ -133,17 +133,17 @@ public class MainActivity extends AppCompatActivity {
             dotLayout.addView(dots[i]);
 
         }
-
-        if(dots.length>0){
-            dots[position].setTextColor(getResources().getColor(R.color.colorWhite));
-        }
+        // Change the color of the first position to be white
+        changeDotIndicatorColor(0);
 
     }
     public void changeDotIndicatorColor(int position){
         for(int i=0; i<dots.length; i++){
-            dots[i].setTextColor(getResources().getColor(R.color.colorGrey));
+            if(position == i)
+                dots[position].setTextColor(getResources().getColor(R.color.colorWhite));
+            else
+                dots[i].setTextColor(getResources().getColor(R.color.colorGrey));
         }
-        dots[position].setTextColor(getResources().getColor(R.color.colorWhite));
     }
 
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
