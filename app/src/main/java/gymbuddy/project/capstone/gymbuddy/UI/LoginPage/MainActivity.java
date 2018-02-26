@@ -189,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // After user re-opens the app, check if they were logged in
         // If they were logged in, take them straight to the HomeActivity
-        // Also, update the user location
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             startHomePageActivity();
         }
