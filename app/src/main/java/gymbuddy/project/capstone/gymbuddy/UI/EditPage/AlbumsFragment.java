@@ -1,18 +1,33 @@
 package gymbuddy.project.capstone.gymbuddy.UI.EditPage;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeFragment;
 
-public class PictureSelectActivity extends AppCompatActivity {
+
+public class AlbumsFragment extends Fragment {
+
+
+    public AlbumsFragment() {
+        // Required empty public constructor
+    }
+
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
+
 
     AlbumsSelectAdapter adapter;
     RecyclerView rv;
@@ -20,22 +35,23 @@ public class PictureSelectActivity extends AppCompatActivity {
     List<Album> albumList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_picture_select);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_albums, container, false);
 
         photosHelper = PhotosAPI.getInstance();
         albumList = FirebaseDatabaseHelper.getInstance().currentUser.albums;
-        rv = findViewById(R.id.AlbumSelectRecyclerView);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AlbumsSelectAdapter(this, albumList);
-        adapter.notifyDataSetChanged();
+        rv = view.findViewById(R.id.AlbumSelectRecyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new AlbumsSelectAdapter(getActivity(), albumList);
         rv.setAdapter(adapter);
         // Clear album data so there won't be any duplicates
         FirebaseDatabaseHelper.getInstance().currentUser.clearAlbums();
         // Fetch user albums and update the adapter
         getUserAlbums();
 
+        return view;
     }
 
     public void getUserAlbums(){
@@ -45,7 +61,7 @@ public class PictureSelectActivity extends AppCompatActivity {
         new CheckAlbumsFetchedAndUpdate(adapter).execute();
     }
 
-    private static class CheckAlbumsFetchedAndUpdate extends AsyncTask<Void, Void, Void>{
+    private static class CheckAlbumsFetchedAndUpdate extends AsyncTask<Void, Void, Void> {
         PhotosAPI helper;
         AlbumsSelectAdapter adapter;
 
@@ -75,4 +91,3 @@ public class PictureSelectActivity extends AppCompatActivity {
     }
 
 }
-

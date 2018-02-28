@@ -7,24 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import com.facebook.login.LoginFragment;
-import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.mindorks.placeholderview.SwipeDecor;
-import com.mindorks.placeholderview.SwipePlaceHolderView;
 
-import java.util.List;
-
-import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.PictureSelectActivity;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
-import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
 
@@ -62,17 +52,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     private void startMainActivity(){
         if(FirebaseAuth.getInstance().getCurrentUser() == null){
             Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
-            Intent accountIntent = new Intent(HomeActivity.this, MainActivity.class);
-            startActivity(accountIntent);
-            finish();
-        }
-    }
-    private void startFBPhotosSelectActivity(){
-
-        if(!(FirebaseAuth.getInstance().getCurrentUser() == null)){
-            Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
-            Intent accountIntent = new Intent(HomeActivity.this, PictureSelectActivity.class);
-            startActivity(accountIntent);
+            startActivity(new Intent(HomeActivity.this, MainActivity.class));
             finish();
         }
     }
@@ -84,7 +64,13 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
     @Override
     public void onPhotosFragmentInteraction() {
-        startFBPhotosSelectActivity();
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.homeFragmentContainer, new AlbumsFragment()).addToBackStack(null);
+
+        fragmentTransaction.commit();
+
     }
 
     @Override
