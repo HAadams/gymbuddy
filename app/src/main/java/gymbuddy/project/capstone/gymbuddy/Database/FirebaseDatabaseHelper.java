@@ -11,10 +11,7 @@ import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;

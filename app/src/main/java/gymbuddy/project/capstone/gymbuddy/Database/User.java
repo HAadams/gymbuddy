@@ -1,15 +1,9 @@
 package gymbuddy.project.capstone.gymbuddy.Database;
 
-import com.facebook.AccessToken;
-import com.google.firebase.auth.FirebaseUser;
-
 import android.net.Uri;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
 
