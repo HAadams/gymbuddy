@@ -15,7 +15,6 @@ public class Album {
         this.name = name;
         this.logo = new Photo(id);
         pictures = new ArrayList<>();
-        addPicture(this.logo);
     }
     public Photo getLogoPicture(){return logo;}
     public String getName(){return name;}
