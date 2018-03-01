@@ -24,10 +24,12 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
     private Context context;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private List<Album> albums;
+    private AlbumsFragment.AlbumListInteractionListener listener;
 
-    public AlbumsSelectAdapter(Context context, List<Album> albums) {
+    public AlbumsSelectAdapter(Context context, List<Album> albums, AlbumsFragment.AlbumListInteractionListener listener) {
         this.context = context;
         this.albums = albums;
+        this.listener = listener;
         firebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
     }
 
@@ -54,8 +56,7 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
     }
 
 
-
-    class AlbumCardViewHolder extends RecyclerView.ViewHolder{
+    class AlbumCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView logo;
         TextView album_name;
@@ -66,8 +67,13 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
             logo = view.findViewById(R.id.album_logo_imageView);
             album_name = view.findViewById(R.id.album_name_textView);
             photos_number = view.findViewById(R.id.photos_number_textView);
+            view.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            listener.onAlbumSelectedInteraction(getLayoutPosition());
+        }
     }
 
 }
