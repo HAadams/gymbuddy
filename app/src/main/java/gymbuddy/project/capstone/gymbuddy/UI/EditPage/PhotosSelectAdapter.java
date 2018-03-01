@@ -44,7 +44,7 @@ public class PhotosSelectAdapter extends BaseAdapter{
                 (int)context.getResources().getDimension(R.dimen.picture_size),
                 (int)context.getResources().getDimension(R.dimen.picture_size)
         )); //dimension in px
-        imageView.setBackgroundColor(context.getResources().getColor(R.color.colorGrey));
+        imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
         Picasso.with(context)
                 .load(album.getPictures().get(i).getURL()).into(imageView);
         return imageView;
