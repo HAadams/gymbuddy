@@ -42,6 +42,7 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
     public void onBindViewHolder(AlbumCardViewHolder holder, int position) {
         Album album = albums.get(position);
         holder.album_name.setText(album.getName());
+        holder.photos_number.setText(Integer.toString(album.getPictures().size()));
         Picasso.with(context)
                 .load(albums.get(position).getLogoPicture().getURL()).into(holder.logo);
 
@@ -58,11 +59,13 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
 
         ImageView logo;
         TextView album_name;
+        TextView photos_number;
 
         AlbumCardViewHolder(View view){
             super(view);
             logo = view.findViewById(R.id.album_logo_imageView);
-            album_name = view.findViewById(R.id.album_titile_textView);
+            album_name = view.findViewById(R.id.album_name_textView);
+            photos_number = view.findViewById(R.id.photos_number_textView);
         }
 
     }

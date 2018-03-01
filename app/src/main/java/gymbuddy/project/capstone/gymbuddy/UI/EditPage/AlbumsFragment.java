@@ -58,7 +58,7 @@ public class AlbumsFragment extends Fragment {
         // This executes a thread to fetch user albums from facebook
         photosHelper.fetchUserAlbums();
         // This waits for the albums to be fetched and notifies the adapter afterwards
-        new CheckAlbumsFetchedAndUpdate(adapter).execute();
+        new AsyncPhotosFetcher(adapter).execute();
     }
 
     private static class CheckAlbumsFetchedAndUpdate extends AsyncTask<Void, Void, Void> {
@@ -78,6 +78,40 @@ public class AlbumsFragment extends Fragment {
                     Log.e(getClass().toString(), "Error occurred while fetching user albums");
                     return null;
                 }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            // Once albums are fetched, notify the adapter to update the list view
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private static class AsyncPhotosFetcher extends AsyncTask<Void, Void, Void> {
+        PhotosAPI helper;
+        AlbumsSelectAdapter adapter;
+
+        AsyncPhotosFetcher(AlbumsSelectAdapter adapter){
+            this.adapter = adapter;
+            helper= PhotosAPI.getInstance();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            while(!helper.isAlbumsFetchComplete()){
+                if(helper.isErrorOccured()){
+                    Log.e(getClass().toString(), "Error occurred while fetching user albums");
+                    return null;
+                }
+            }
+
+            for(int i=0; i<helper.firebaseDatabaseHelper.currentUser.albums.size(); i++){
+                helper.fetchPhotosFromAlbum(helper.firebaseDatabaseHelper.currentUser.albums.get(i).getID(), i);
+                while(!helper.isPhotosFetchComplete()){}
             }
             return null;
         }

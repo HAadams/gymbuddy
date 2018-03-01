@@ -11,38 +11,55 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/album_card_constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <ImageView
             android:id="@+id/album_logo_imageView"
-            android:layout_width="96dp"
-            android:layout_height="74dp"
+            android:layout_width="61dp"
+            android:layout_height="60dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.428"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
         <TextView
-            android:id="@+id/album_titile_textView"
+            android:id="@+id/photos_number_textView"
             android:layout_width="177dp"
             android:layout_height="27dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="44dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.342"
+            app:layout_constraintStart_toEndOf="@+id/album_logo_imageView"
+            app:layout_constraintTop_toBottomOf="@+id/album_name_textView"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/album_name_textView"
+            android:layout_width="177dp"
+            android:layout_height="23dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/album_logo_imageView"
             app:layout_constraintTop_toTopOf="parent" />
