@@ -16,10 +16,12 @@ public class PhotosSelectAdapter extends BaseAdapter{
 
     Album album;
     Context context;
+    OnListFragmentInteractionListener mListener;
 
-    PhotosSelectAdapter(Context context, Album album){
+    PhotosSelectAdapter(Context context, Album album, OnListFragmentInteractionListener mListener){
         this.context = context;
         this.album = album;
+        this.mListener = mListener;
     }
 
     @Override
@@ -38,16 +40,23 @@ public class PhotosSelectAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         ImageView imageView = new ImageView(context);
         imageView.setLayoutParams(new GridView.LayoutParams(
                 (int)context.getResources().getDimension(R.dimen.picture_size),
                 (int)context.getResources().getDimension(R.dimen.picture_size)
         )); //dimension in px
         imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onPicturePressedInteraction(album.getPictures().get(i));
+            }
+        });
         Picasso.with(context)
                 .load(album.getPictures().get(i).getURL()).into(imageView);
         return imageView;
 
     }
+
 }

@@ -18,8 +18,5 @@ public class Photo {
                 .replace("token_id", AccessToken.getCurrentAccessToken().getToken());
     }
 
-    public void setID(String id){this.id = id;}
-    public String getID(){return id;}
     public String getURL(){return url;}
-    public void setURL(String url){this.url = url;}
 }

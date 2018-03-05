@@ -117,16 +117,6 @@ public class FirebaseDatabaseHelper {
         rootRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.longitude);
     }
 
-    public void updateUserPhotos(){
-        userRef = rootRef.child(user.getUid());
-        Firebase picRef = userRef.child(PHOTOS);
-        Firebase inRef;
-        for(Album album: currentUser.albums) {
-            inRef = picRef.child(album.getID());
-            for(Photo pic: album.getPictures())
-                inRef.child(pic.getID()).setValue(pic.getURL());
-        }
-    }
     private boolean isErrorOccured(){return errorOccured;}
 
     private static class UserDataUpdater extends AsyncTask<Void, Void, Void> {
