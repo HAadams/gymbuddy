@@ -5,9 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import gymbuddy.project.capstone.gymbuddy.R;
 
@@ -41,21 +40,20 @@ public class PhotosSelectAdapter extends BaseAdapter{
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        ImageView imageView = new ImageView(context);
-        imageView.setLayoutParams(new GridView.LayoutParams(
-                (int)context.getResources().getDimension(R.dimen.picture_size),
-                (int)context.getResources().getDimension(R.dimen.picture_size)
-        )); //dimension in px
-        imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
-        imageView.setOnClickListener(new View.OnClickListener() {
+
+        SimpleDraweeView draweeView = new SimpleDraweeView(context);
+        draweeView.setImageURI(album.getPictures().get(i).getURL());
+        draweeView.setLayoutParams(new GridView.LayoutParams(
+                  (int)context.getResources().getDimension(R.dimen.picture_size),
+                 (int)context.getResources().getDimension(R.dimen.picture_size)
+        ));
+        draweeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onPicturePressedInteraction(album.getPictures().get(i));
             }
         });
-        Picasso.with(context)
-                .load(album.getPictures().get(i).getURL()).into(imageView);
-        return imageView;
+        return draweeView;
 
     }
 

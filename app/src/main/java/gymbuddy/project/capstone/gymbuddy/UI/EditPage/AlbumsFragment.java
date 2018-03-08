@@ -82,34 +82,6 @@ public class AlbumsFragment extends Fragment {
         new AsyncPhotosFetcher(adapter).execute();
     }
 
-    private static class CheckAlbumsFetchedAndUpdate extends AsyncTask<Void, Void, Void> {
-        PhotosAPI helper;
-        AlbumsSelectAdapter adapter;
-
-        CheckAlbumsFetchedAndUpdate(AlbumsSelectAdapter adapter){
-            this.adapter = adapter;
-            helper= PhotosAPI.getInstance();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            // Wait for albums to be fetched, return on error
-            while(!helper.isAlbumsFetchComplete()){
-                if(helper.isErrorOccured()){
-                    Log.e(getClass().toString(), "Error occurred while fetching user albums");
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            // Once albums are fetched, notify the adapter to update the list view
-            adapter.notifyDataSetChanged();
-        }
-    }
     private static void updatePhotosViewer(final AlbumsSelectAdapter ad){
         mContext.runOnUiThread(new Runnable() {
             @Override

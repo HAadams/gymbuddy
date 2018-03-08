@@ -5,11 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
@@ -45,8 +44,7 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
         Album album = albums.get(position);
         holder.album_name.setText(album.getName());
         holder.photos_number.setText(Integer.toString(album.getPictures().size()));
-        Picasso.with(context)
-                .load(albums.get(position).getLogoPicture().getURL()).into(holder.logo);
+        holder.logo.setImageURI(albums.get(position).getLogoPicture().getURL());
 
     }
 
@@ -58,7 +56,7 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
 
     class AlbumCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        ImageView logo;
+        SimpleDraweeView logo;
         TextView album_name;
         TextView photos_number;
 
