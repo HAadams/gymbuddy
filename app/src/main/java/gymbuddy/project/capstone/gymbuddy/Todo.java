@@ -23,7 +23,6 @@ package gymbuddy.project.capstone.gymbuddy;
 //  -   Implement tap image to select it (basically on click listener that returns String url)
 //  -   Implement swipe down, up, left and right to exit zoomed image view
 //  ---------------------------------------------------------------------------------------
-//  Implement new database functionality (Update to the flattened out database)
 //
 //
 //

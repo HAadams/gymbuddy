@@ -22,25 +22,6 @@ import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
 
 public class FirebaseDatabaseHelper {
 
-    private final String FIREBASE_DATABASE_URL_USERS = "https://gymbuddy-a1579.firebaseio.com/Users";
-    public final String GENDER = "gender";
-    public final String BIRTHDAY = "birthday";
-    public final String EMAIL = "email";
-    public final String LATITUDE = "latitude";
-    public final String LONGITUDE = "longitude";
-    public final String NAME = "name";
-    public final String PROFILE_PIC = "profile_picture";
-    public final String ID = "id";
-    public final String PHOTOS = "photos";
-
-
-    private boolean fetchComplete;
-    private boolean errorOccured;
-    private Firebase rootRef;
-    public User currentUser;
-    private Firebase userRef;
-    private FirebaseUser user;
-
     private static FirebaseDatabaseHelper initialInstance = null;
 
     public static synchronized FirebaseDatabaseHelper getInstance(){
@@ -51,14 +32,47 @@ public class FirebaseDatabaseHelper {
         return initialInstance;
     }
 
+    private static final String FIREBASE_DATABASE_URL = "https://gymbuddy-a1579.firebaseio.com";
+    private static final String GENDERS = "Genders";
+    private static final String PHOTOS = "Photos";
+    private static final String BIRTHDATES = "Birthdates";
+    private static final String LIKES = "Likes";
+    private static final String LIKED = "Liked";
+    private static final String FRIENDS = "Friends";
+    private static final String LOCATIONS = "Locations";
+    private static final String NAMES = "Names";
+    private static final String EMAILS = "Emails";
+
+    public final String GENDER = "gender";
+    public final String BIRTHDAY = "birthday";
+    public final String LATITUDE = "latitude";
+    public final String LONGITUDE = "longitude";
+    public final String NAME = "name";
+    public final String ID = "id";
+
+    private static Firebase rootRef, namesRef, locationsRef, gendersRef, birthdatesRef,
+            likesRef, likedRef, friendsRef, photosRef, emailsRef;
+
+    private boolean fetchComplete;
+    private boolean errorOccured;
+    public static User currentUser;
+    private static FirebaseUser user;
+
     private FirebaseDatabaseHelper(){
         fetchComplete = false;
         errorOccured = false;
         currentUser = new User();
-        rootRef = new Firebase(FIREBASE_DATABASE_URL_USERS);
+        rootRef = new Firebase(FIREBASE_DATABASE_URL);
+        locationsRef = rootRef.child(LOCATIONS);
+        gendersRef = rootRef.child(GENDERS);
+        birthdatesRef = rootRef.child(BIRTHDATES);
+        likesRef = rootRef.child(LIKES);
+        likedRef = rootRef.child(LIKED);
+        friendsRef = rootRef.child(FRIENDS);
+        photosRef = rootRef.child(PHOTOS);
+        namesRef = rootRef.child(NAMES);
+        emailsRef = rootRef.child(EMAILS);
     }
-
-    public boolean isFetchComplete(){return fetchComplete;}
 
     public void UploadUserDataToDatabase(){
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -70,6 +84,45 @@ public class FirebaseDatabaseHelper {
         new UserDataUpdater().execute();
 
     }
+
+    public void updateLatitudeLocation(Double latitude){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        currentUser.latitude = latitude.toString();;
+        locationsRef.child(user.getUid()).child(LATITUDE).setValue(currentUser.latitude);
+    }
+
+    public void updateLongitudeLocation(Double longitude){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        currentUser.longitude = longitude.toString();
+        locationsRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.longitude);
+    }
+
+    public void updateUserPhotos(Integer index, String url){
+        Firebase deepPhotosRef = photosRef.child(user.getUid());
+        deepPhotosRef.child(index.toString()).setValue(url);
+    }
+
+    public void updateUserEmail(String email){
+        emailsRef.child(user.getUid()).setValue(email);
+    }
+
+    public void updateUserGender(String gender){
+        gendersRef.child(user.getUid()).setValue(gender);
+    }
+
+    public void updateUserBirthdate(String birthdate){
+        birthdatesRef.child(user.getUid()).setValue(birthdate);
+    }
+
+    public void updateUserName(String name){
+        namesRef.child(user.getUid()).setValue(name);
+    }
+
+    private boolean isErrorOccured(){return errorOccured;}
+
+    private boolean isFetchComplete(){return fetchComplete;}
 
     private void FetchCurrentUserData(){
         fetchComplete = false;
@@ -103,25 +156,8 @@ public class FirebaseDatabaseHelper {
         request.executeAsync();
     }
 
-    public void updateLatitudeLocation(Double latitude){
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null) return;
-        currentUser.latitude = latitude.toString();;
-        rootRef.child(user.getUid()).child(LATITUDE).setValue(currentUser.latitude);
-    }
-
-    public void updateLongitudeLocation(Double longitude){
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null) return;
-        currentUser.longitude = longitude.toString();
-        rootRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.longitude);
-    }
-
-    private boolean isErrorOccured(){return errorOccured;}
-
     private static class UserDataUpdater extends AsyncTask<Void, Void, Void> {
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
-        Firebase userRef = fdbh.rootRef.child(fdbh.user.getUid());
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -136,11 +172,11 @@ public class FirebaseDatabaseHelper {
                 Log.e("UserDataUpdater", "Error occurred in graph request that updates user data.");
                 return;
             }
-            userRef.child(fdbh.NAME).setValue(fdbh.currentUser.name);
-            userRef.child(fdbh.BIRTHDAY).setValue(fdbh.currentUser.birthday);
-            userRef.child(fdbh.GENDER).setValue(fdbh.currentUser.gender);
-            userRef.child(fdbh.EMAIL).setValue(fdbh.currentUser.email);
-            userRef.child(fdbh.PROFILE_PIC).setValue(fdbh.currentUser.photoURL.toString());
+            fdbh.updateUserBirthdate(currentUser.birthday);
+            fdbh.updateUserPhotos(0, currentUser.photoURL.toString());
+            fdbh.updateUserEmail(currentUser.email);
+            fdbh.updateUserGender(currentUser.gender);
+            fdbh.updateUserName(currentUser.name);
         }
     }
 }
