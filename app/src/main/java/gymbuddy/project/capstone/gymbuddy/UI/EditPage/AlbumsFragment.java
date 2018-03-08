@@ -1,5 +1,6 @@
 package gymbuddy.project.capstone.gymbuddy.UI.EditPage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class AlbumsFragment extends Fragment {
     AlbumListInteractionListener albums_listener;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+    static Activity mContext;
 
     @Override
     public void onAttach(Context context) {
@@ -57,7 +59,7 @@ public class AlbumsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_albums, container, false);
-
+        mContext = getActivity();
         photosHelper = PhotosAPI.getInstance();
         albumList = FirebaseDatabaseHelper.getInstance().currentUser.albums;
 
@@ -108,7 +110,16 @@ public class AlbumsFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
     }
+    private static void updatePhotosViewer(final AlbumsSelectAdapter ad){
+        mContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
+                ad.notifyDataSetChanged();
+
+            }
+        });
+    }
     private static class AsyncPhotosFetcher extends AsyncTask<Void, Void, Void> {
         PhotosAPI helper;
         AlbumsSelectAdapter adapter;
@@ -127,10 +138,10 @@ public class AlbumsFragment extends Fragment {
                     return null;
                 }
             }
-
             for(int i=0; i<helper.firebaseDatabaseHelper.currentUser.albums.size(); i++){
+                updatePhotosViewer(adapter);
                 helper.fetchPhotosFromAlbum(helper.firebaseDatabaseHelper.currentUser.albums.get(i).getID(), i);
-                while(!helper.isPhotosFetchComplete()){}
+                while(!helper.isPhotosFetchComplete());
             }
             return null;
         }
