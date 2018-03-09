@@ -91,7 +91,6 @@ public class FirebaseDatabaseHelper {
         currentUser.setName(user.getDisplayName());
         currentUser.setEmail(user.getEmail());
         currentUser.setPhotoURL(user.getPhotoUrl());
-        System.out.println(user.getPhotoUrl().toString());
         FetchCurrentUserData();
         new UserDataUpdater().execute();
     }
