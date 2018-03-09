@@ -2,6 +2,7 @@ package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
@@ -23,7 +26,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-
+    FirebaseDatabaseHelper fdbh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setContentView(R.layout.activity_home);
 
         Fresco.initialize(this);
+
+        fdbh = FirebaseDatabaseHelper.getInstance();
 
         context = this;
 
@@ -41,7 +46,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.replace(R.id.homeFragmentContainer, new HomeFragment());
 
         fragmentTransaction.commit();
-    }
+
+        }
 
     @Override
     public void onResume(){
@@ -49,7 +55,9 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
+            CurrentUser.getInstance().SaveUserLocationToDevice(this);
         }
+
     }
 
     private void startMainActivity(){
@@ -101,5 +109,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.commit();
 
     }
+
 }
 

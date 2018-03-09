@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
@@ -54,7 +55,7 @@ public class PhotosFragment extends Fragment implements OnListFragmentInteractio
 
         GridView gridView = view.findViewById(R.id.photosList_gridView);
         gridView.setAdapter(new PhotosSelectAdapter(getActivity(),
-                            fdbh.currentUser.albums.get(getArguments().getInt(POSITION)),
+                            CurrentUser.getInstance().getAlbums().get(getArguments().getInt(POSITION)),
                             this));
 
         return view;

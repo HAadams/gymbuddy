@@ -1,22 +1,31 @@
 package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment {
@@ -32,6 +41,7 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private Boolean mParam1;
     private String mParam2;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,9 +72,15 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
         mSwipeView = rootView.findViewById(R.id.swipeView);
         mContext = getContext();
+        if(CurrentUser.getInstance().getPhotoURL() == null)
+            CurrentUser.getInstance().GetUserDataFromDevice(getActivity());
+        else
+            CurrentUser.getInstance().SaveUserDataToDevice(getActivity());
+
+        SimpleDraweeView v = rootView.findViewById(R.id.homeProfileButton);
+        v.setImageURI(CurrentUser.getInstance().getPhotoURL());
 
         mSwipeView.getBuilder()
                 .setDisplayViewCount(5)
@@ -73,6 +89,7 @@ public class HomeFragment extends Fragment {
                         .setRelativeScale(0.01f)
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
 
         for(Profile profile : Utils.loadProfiles(mContext)){
             mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
@@ -126,8 +143,6 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
-
-
     public void onLogoutButtonPressed() {
         if (mListener != null) {
             mListener.onLogoutFragmentInteraction();
@@ -169,7 +184,6 @@ public class HomeFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
 
     public interface OnFragmentInteractionListener {
         void onLogoutFragmentInteraction();
