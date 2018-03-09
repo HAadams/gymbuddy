@@ -50,10 +50,29 @@ public class CurrentUser extends User {
         setName(sharedPreferences.getString(fdbh.NAME, null));
     }
 
-    public void GetUserLocationFromDevice(Context context){
+    private void getUserLatitudeFromDevice(Context context){
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         SharedPreferences sharedPreferences = context.getSharedPreferences("STRING", MODE_PRIVATE);
         setLatitude(sharedPreferences.getString(fdbh.LATITUDE, null));
+    }
+
+    private void getUserLongitudeFromDevice(Context context){
+        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("STRING", MODE_PRIVATE);
         setLongitude(sharedPreferences.getString(fdbh.LONGITUDE, null));
+    }
+
+    public String getLongitude(Context context) {
+        if (getLongitude() == null)
+            getUserLongitudeFromDevice(context);
+
+        return getLongitude();
+    }
+
+    public String getLatitude(Context context) {
+        if(getLatitude(context) == null)
+            getUserLatitudeFromDevice(context);
+
+        return getLatitude();
     }
 }
