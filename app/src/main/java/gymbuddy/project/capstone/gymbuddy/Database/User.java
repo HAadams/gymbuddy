@@ -8,10 +8,6 @@ import java.util.List;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
 
-/**
- * Created by Sein on 2/15/18.
- */
-
 public class User {
     private static final int MAX_PROFILE_PHOTOS_NUMBER = 5;
     private String birthday;
@@ -22,7 +18,7 @@ public class User {
     private String latitude;
     private String fbUserID;
     private List<Album> albums;
-    private List<Photo> photos; // List of photos user chose
+    private List<Photo> photos; // List of profile pictures that user chooses
     private Uri photoURL;
 
     public User(){
