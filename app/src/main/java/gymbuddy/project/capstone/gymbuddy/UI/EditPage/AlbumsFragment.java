@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
@@ -61,14 +62,14 @@ public class AlbumsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_albums, container, false);
         mContext = getActivity();
         photosHelper = PhotosAPI.getInstance();
-        albumList = FirebaseDatabaseHelper.getInstance().currentUser.albums;
+        albumList = CurrentUser.getInstance().getAlbums();
 
         rv = view.findViewById(R.id.AlbumSelectRecyclerView);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new AlbumsSelectAdapter(getActivity(), albumList, albums_listener);
         rv.setAdapter(adapter);
         // Clear album data so there won't be any duplicates
-        FirebaseDatabaseHelper.getInstance().currentUser.clearAlbums();
+        CurrentUser.getInstance().clearAlbums();
         // Fetch user albums and update the adapter
         getUserAlbums();
 
@@ -110,9 +111,9 @@ public class AlbumsFragment extends Fragment {
                     return null;
                 }
             }
-            for(int i=0; i<helper.firebaseDatabaseHelper.currentUser.albums.size(); i++){
+            for(int i=0; i<CurrentUser.getInstance().getAlbums().size(); i++){
                 updatePhotosViewer(adapter);
-                helper.fetchPhotosFromAlbum(helper.firebaseDatabaseHelper.currentUser.albums.get(i).getID(), i);
+                helper.fetchPhotosFromAlbum(CurrentUser.getInstance().getAlbums().get(i).getID(), i);
                 while(!helper.isPhotosFetchComplete());
             }
             return null;

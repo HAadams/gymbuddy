@@ -1,5 +1,7 @@
 package gymbuddy.project.capstone.gymbuddy.Database;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,7 +9,11 @@ import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -15,6 +21,8 @@ import org.json.JSONObject;
 
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Sein on 2/15/18.
@@ -49,19 +57,21 @@ public class FirebaseDatabaseHelper {
     public final String LONGITUDE = "longitude";
     public final String NAME = "name";
     public final String ID = "id";
+    public final String PROFILE_PICTURE = "profile_picture";
+    public final String EMAIL = "email";
 
     private static Firebase rootRef, namesRef, locationsRef, gendersRef, birthdatesRef,
             likesRef, likedRef, friendsRef, photosRef, emailsRef;
 
     private boolean fetchComplete;
     private boolean errorOccured;
-    public static User currentUser;
+    private CurrentUser currentUser;
     private static FirebaseUser user;
 
     private FirebaseDatabaseHelper(){
         fetchComplete = false;
         errorOccured = false;
-        currentUser = new User();
+        currentUser = CurrentUser.getInstance();
         rootRef = new Firebase(FIREBASE_DATABASE_URL);
         locationsRef = rootRef.child(LOCATIONS);
         gendersRef = rootRef.child(GENDERS);
@@ -72,47 +82,56 @@ public class FirebaseDatabaseHelper {
         photosRef = rootRef.child(PHOTOS);
         namesRef = rootRef.child(NAMES);
         emailsRef = rootRef.child(EMAILS);
+
     }
 
     public void UploadUserDataToDatabase(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        currentUser.name = user.getDisplayName();
-        currentUser.email = user.getEmail();
-        currentUser.photoURL = user.getPhotoUrl();
+        currentUser.setName(user.getDisplayName());
+        currentUser.setEmail(user.getEmail());
+        currentUser.setPhotoURL(user.getPhotoUrl());
+        System.out.println(user.getPhotoUrl().toString());
         FetchCurrentUserData();
         new UserDataUpdater().execute();
-
     }
 
     public void updateLatitudeLocation(Double latitude){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        currentUser.latitude = latitude.toString();;
-        locationsRef.child(user.getUid()).child(LATITUDE).setValue(currentUser.latitude);
+        currentUser.setLatitude(latitude.toString());;
+        locationsRef.child(user.getUid()).child(LATITUDE).setValue(currentUser.getLatitude());
     }
 
     public void updateLongitudeLocation(Double longitude){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        currentUser.longitude = longitude.toString();
-        locationsRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.longitude);
+        currentUser.setLongitude(longitude.toString());
+        locationsRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.getLongitude());
     }
 
     public void updateUserPhotos(Integer index, String url){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
         Firebase deepPhotosRef = photosRef.child(user.getUid());
         deepPhotosRef.child(index.toString()).setValue(url);
     }
 
     public void updateUserEmail(String email){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
         emailsRef.child(user.getUid()).setValue(email);
     }
 
     public void updateUserGender(String gender){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
         gendersRef.child(user.getUid()).setValue(gender);
     }
 
     public void updateUserBirthdate(String birthdate){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
         birthdatesRef.child(user.getUid()).setValue(birthdate);
     }
 
@@ -136,9 +155,9 @@ public class FirebaseDatabaseHelper {
                             JSONObject object,
                             GraphResponse response) {
                         try {
-                            currentUser.birthday = object.getString(BIRTHDAY);
-                            currentUser.gender = object.getString(GENDER);
-                            currentUser.fbUserID = object.getString(ID);
+                            currentUser.setBirthday(object.getString(BIRTHDAY));
+                            currentUser.setGender(object.getString(GENDER));
+                            currentUser.setFbUserID(object.getString(ID));
                             fetchComplete = true;
                         }catch(Exception e){
                             Log.e(getClass().toString(), "Error fetching user information");
@@ -172,11 +191,11 @@ public class FirebaseDatabaseHelper {
                 Log.e("UserDataUpdater", "Error occurred in graph request that updates user data.");
                 return;
             }
-            fdbh.updateUserBirthdate(currentUser.birthday);
-            fdbh.updateUserPhotos(0, currentUser.photoURL.toString());
-            fdbh.updateUserEmail(currentUser.email);
-            fdbh.updateUserGender(currentUser.gender);
-            fdbh.updateUserName(currentUser.name);
+            fdbh.updateUserBirthdate(fdbh.currentUser.getBirthday());
+            fdbh.updateUserPhotos(0, fdbh.currentUser.getPhotoURL().toString());
+            fdbh.updateUserEmail(fdbh.currentUser.getEmail());
+            fdbh.updateUserGender(fdbh.currentUser.getGender());
+            fdbh.updateUserName(fdbh.currentUser.getName());
         }
     }
 }

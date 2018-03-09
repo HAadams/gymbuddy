@@ -173,9 +173,6 @@ public class MainActivity extends AppCompatActivity {
                     loginButton.setVisibility(View.VISIBLE);
 
                 }
-
-
-
         }
 
         @Override
@@ -202,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateUserData(){
         try {
-            // Set the access token to access the user's profile data
             FirebaseDatabaseHelper.getInstance().UploadUserDataToDatabase();
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());
