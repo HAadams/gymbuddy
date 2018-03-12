@@ -17,6 +17,7 @@ package gymbuddy.project.capstone.gymbuddy;
 //
 //
 //  Hussein:
+//  Add profile edit fragment
 //
 //  Only implement the below two points after creating the Edit profile page activity/fragment.
 //  ---------------------------------------------------------------------------------------

@@ -15,14 +15,10 @@ import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
-/**
- * Created by Sein on 2/22/18.
- */
 
 public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapter.AlbumCardViewHolder>{
 
     private Context context;
-    private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private List<Album> albums;
     private AlbumsFragment.AlbumListInteractionListener listener;
 
@@ -30,7 +26,6 @@ public class AlbumsSelectAdapter extends RecyclerView.Adapter<AlbumsSelectAdapte
         this.context = context;
         this.albums = albums;
         this.listener = listener;
-        firebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
     }
 
     @Override
