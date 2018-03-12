@@ -82,7 +82,6 @@ public class FirebaseDatabaseHelper {
         photosRef = rootRef.child(PHOTOS);
         namesRef = rootRef.child(NAMES);
         emailsRef = rootRef.child(EMAILS);
-
     }
 
     public void UploadUserDataToDatabase(){
@@ -145,33 +144,36 @@ public class FirebaseDatabaseHelper {
     private void FetchCurrentUserData(){
         fetchComplete = false;
         errorOccured = false;
-
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(
-                            JSONObject object,
-                            GraphResponse response) {
-                        try {
-                            currentUser.setBirthday(object.getString(BIRTHDAY));
-                            currentUser.setGender(object.getString(GENDER));
-                            currentUser.setFbUserID(object.getString(ID));
-                            fetchComplete = true;
-                        }catch(Exception e){
-                            Log.e(getClass().toString(), "Error fetching user information");
-                            Log.e(getClass().getName(), e.toString());
-                            fetchComplete = false;
-                            errorOccured = true;
+        try {
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+                            try {
+                                currentUser.setBirthday(object.getString(BIRTHDAY));
+                                currentUser.setGender(object.getString(GENDER));
+                                currentUser.setFbUserID(object.getString(ID));
+                                fetchComplete = true;
+                            } catch (Exception e) {
+                                Log.e(getClass().toString(), "Error fetching user information");
+                                Log.e(getClass().getName(), e.toString());
+                                fetchComplete = false;
+                                errorOccured = true;
+                            }
                         }
-                    }
-                });
+                    });
 
-        Bundle parameters = new Bundle();
-        // The information the request will fetch is defined in parameters
-        parameters.putString("fields", "id,name,link,gender,birthday,email");
-        request.setParameters(parameters);
-        request.executeAsync();
+            Bundle parameters = new Bundle();
+            // The information the request will fetch is defined in parameters
+            parameters.putString("fields", "id,name,link,gender,birthday,email");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }catch(Exception e){
+            Log.e("FetchCurrentUserData", e.getStackTrace().toString());
+        }
     }
 
     private static class UserDataUpdater extends AsyncTask<Void, Void, Void> {

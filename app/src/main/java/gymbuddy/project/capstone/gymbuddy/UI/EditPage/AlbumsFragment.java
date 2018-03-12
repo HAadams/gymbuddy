@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -68,12 +69,17 @@ public class AlbumsFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new AlbumsSelectAdapter(getActivity(), albumList, albums_listener);
         rv.setAdapter(adapter);
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         // Clear album data so there won't be any duplicates
         CurrentUser.getInstance().clearAlbums();
         // Fetch user albums and update the adapter
         getUserAlbums();
-
-        return view;
     }
 
     public void getUserAlbums(){
@@ -104,17 +110,21 @@ public class AlbumsFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
-            while(!helper.isAlbumsFetchComplete()){
-                if(helper.isErrorOccured()){
-                    Log.e(getClass().toString(), "Error occurred while fetching user albums");
-                    return null;
+            Looper.prepare();
+            try {
+                while (!helper.isAlbumsFetchComplete()) {
+                    if (helper.isErrorOccured()) {
+                        Log.e(getClass().toString(), "Error occurred while fetching user albums");
+                        return null;
+                    }
                 }
-            }
-            for(int i=0; i<CurrentUser.getInstance().getAlbums().size(); i++){
-                updatePhotosViewer(adapter);
-                helper.fetchPhotosFromAlbum(CurrentUser.getInstance().getAlbums().get(i).getID(), i);
-                while(!helper.isPhotosFetchComplete());
+                for (int i = 0; i < CurrentUser.getInstance().getAlbums().size(); i++) {
+                    updatePhotosViewer(adapter);
+                    helper.fetchPhotosFromAlbum(CurrentUser.getInstance().getAlbums().get(i).getID(), i);
+                    while (!helper.isPhotosFetchComplete()) ;
+                }
+            }catch(Exception e){
+                Log.e("AsyncPhotoFetcher", e.getStackTrace().toString());
             }
             return null;
         }
@@ -122,6 +132,7 @@ public class AlbumsFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            System.out.println("Thread is  DONE");
             // Once albums are fetched, notify the adapter to update the list view
             adapter.notifyDataSetChanged();
         }
