@@ -84,11 +84,11 @@ public class MessageFragment extends Fragment {
             }
 
 
-            recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
+          //  recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
 
             List<User> navTopics = new ArrayList<>();
 
-            navRV.setAdapter(new NavRecyclerViewAdapter(mListener, navTopics));
+           // navRV.setAdapter(new NavRecyclerViewAdapter(mListener, navTopics));
         }
         return view;
     }
