@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
 
@@ -28,7 +29,7 @@ public class MessageFragment extends Fragment {
     private int mID;
     private String mTitle;
 
-    private OnListFragmentInteractionListener mListener;
+    private OnListInteractionListener mListener;
 
 
     public MessageFragment() {
@@ -69,9 +70,48 @@ public class MessageFragment extends Fragment {
         RecyclerView navRV = view.findViewById(R.id.recyclerView);
 
        //todo users = get users that you have already started talking to
-        users.add(new User());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
+        users.add(CurrentUser.getInstance());
 
-        if (rView instanceof RecyclerView) {
+
             final Context context = view.getContext();
 
             RecyclerView recyclerView = (RecyclerView) rView;
@@ -84,12 +124,13 @@ public class MessageFragment extends Fragment {
             }
 
 
-          //  recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
+           recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
 
             List<User> navTopics = new ArrayList<>();
+            navTopics.add(CurrentUser.getInstance());
 
-           // navRV.setAdapter(new NavRecyclerViewAdapter(mListener, navTopics));
-        }
+            //navRV.setAdapter(new MatchedRecyclerViewAdapter(mListener, navTopics));
+
         return view;
     }
 
@@ -97,12 +138,12 @@ public class MessageFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
+//        if (context instanceof OnListInteractionListener) {
+//            mListener = (OnListInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnListFragmentInteractionListener");
+//        }
     }
 
     @Override
