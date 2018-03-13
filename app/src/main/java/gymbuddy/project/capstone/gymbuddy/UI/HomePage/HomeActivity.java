@@ -15,13 +15,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
+import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.MessageFragment;
 
-public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MessageFragment.OnListFragmentInteractionListener {
 
     Context context;
 
@@ -93,7 +95,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         fragmentTransaction.setCustomAnimations(R.anim.exit_r, R.anim.enter_r, R.anim.pop_exit_r, R.anim.pop_enter_r);
 
-        fragmentTransaction.replace(R.id.homeFragmentContainer, new MessengerFragment()).addToBackStack(null);
+        fragmentTransaction.replace(R.id.homeFragmentContainer, new MessageFragment()).addToBackStack(null);
 
         fragmentTransaction.commit();
 
@@ -111,5 +113,14 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
     }
 
+    @Override
+    public void onNavListFragmentInteraction(User item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(User item) {
+
+    }
 }
 
