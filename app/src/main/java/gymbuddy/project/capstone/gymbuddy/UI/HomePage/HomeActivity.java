@@ -18,6 +18,7 @@ import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
@@ -78,7 +79,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.homeFragmentContainer, new AlbumsFragment()).addToBackStack(null);
+        fragmentTransaction.replace(R.id.homeFragmentContainer, new EditProfileFragment()).addToBackStack(null);
 
         fragmentTransaction.commit();
 

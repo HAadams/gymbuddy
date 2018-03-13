@@ -12,7 +12,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
-import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
 

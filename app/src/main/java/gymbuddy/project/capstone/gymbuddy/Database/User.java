@@ -24,6 +24,8 @@ public class User {
     public User(){
         albums = new ArrayList<>();
         photos = new ArrayList<>(MAX_PROFILE_PHOTOS_NUMBER);
+        for(int i=0; i<MAX_PROFILE_PHOTOS_NUMBER; i++)
+            photos.add(null);
     }
 
     public List<Photo> getPhotos() {

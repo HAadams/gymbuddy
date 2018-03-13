@@ -28,10 +28,7 @@ public class AlbumsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AlbumsFragment newInstance() {
-        return new AlbumsFragment();
-    }
-
+    private static final String PROFILE_PIC_POSITION = "profile_pic_position";
 
     AlbumsSelectAdapter adapter;
     RecyclerView rv;
@@ -42,15 +39,24 @@ public class AlbumsFragment extends Fragment {
     FragmentTransaction fragmentTransaction;
     static Activity mContext;
 
+    public static AlbumsFragment newInstance(int profile_pic_position) {
+
+        Bundle args = new Bundle();
+        AlbumsFragment fragment = new AlbumsFragment();
+        args.putInt(PROFILE_PIC_POSITION, profile_pic_position);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentManager = getActivity().getSupportFragmentManager();
         albums_listener = new AlbumListInteractionListener() {
             @Override
-            public void onAlbumSelectedInteraction(int position) {
+            public void onAlbumSelectedInteraction(int allbum_position) {
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.homeFragmentContainer, PhotosFragment.newInstance(position)).addToBackStack(null);
+                fragmentTransaction.replace(R.id.homeFragmentContainer, PhotosFragment.newInstance(allbum_position, getArguments().getInt(PROFILE_PIC_POSITION))).addToBackStack(null);
                 fragmentTransaction.commit();
             }
         };
@@ -110,7 +116,6 @@ public class AlbumsFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Looper.prepare();
             try {
                 while (!helper.isAlbumsFetchComplete()) {
                     if (helper.isErrorOccured()) {

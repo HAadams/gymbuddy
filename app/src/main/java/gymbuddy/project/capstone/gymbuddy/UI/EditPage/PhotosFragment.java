@@ -23,6 +23,8 @@ public class PhotosFragment extends Fragment implements OnListFragmentInteractio
    // private OnListFragmentInteractionListener mListener;
 
     private static final String POSITION = "position";
+    private static final String PROFILE_PIC_POSITION = "profile_pic_position";
+
     private FirebaseDatabaseHelper fdbh;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -32,10 +34,11 @@ public class PhotosFragment extends Fragment implements OnListFragmentInteractio
         // Required empty public constructor
     }
 
-    public static PhotosFragment newInstance(int position) {
+    public static PhotosFragment newInstance(int album_position, int profile_pic_position) {
         PhotosFragment fragment = new PhotosFragment();
         Bundle args = new Bundle();
-        args.putInt(POSITION, position);
+        args.putInt(POSITION, album_position);
+        args.putInt(PROFILE_PIC_POSITION, profile_pic_position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +69,7 @@ public class PhotosFragment extends Fragment implements OnListFragmentInteractio
     public void onPicturePressedInteraction(Photo photo) {
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.homeFragmentContainer,
-                PhotoZoomFragment.newInstance(photo.getURL())).addToBackStack(null);
+                PhotoZoomFragment.newInstance(photo.getURL(), getArguments().getInt(PROFILE_PIC_POSITION))).addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

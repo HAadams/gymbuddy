@@ -5,71 +5,103 @@
     android:layout_height="match_parent"
     tools:context="gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="275dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/profile_imageView"
-            android:layout_width="182dp"
-            android:layout_height="157dp"
-            android:layout_marginStart="8dp"
+        <FrameLayout
+            android:id="@+id/frameLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:src="@drawable/com_facebook_auth_dialog_cancel_background"
+            android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profile_imageView"
+                    android:layout_width="182dp"
+                    android:layout_height="157dp"
+                    android:background="@color/colorAccent"
+                    android:src="@drawable/com_facebook_auth_dialog_cancel_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+        </FrameLayout>
 
-        <ImageView
-            android:id="@+id/profile_imageView2"
-            android:layout_width="182dp"
-            android:layout_height="157dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/com_facebook_auth_dialog_cancel_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
-            app:layout_constraintStart_toEndOf="@+id/profile_imageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/profile_imageView3"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/com_facebook_auth_dialog_cancel_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/profile_imageView4"
-            app:layout_constraintStart_toEndOf="@+id/profile_imageView5"
-            app:layout_constraintTop_toBottomOf="@+id/profile_imageView" />
-
-        <ImageView
-            android:id="@+id/profile_imageView4"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="8dp"
+        <FrameLayout
+            android:id="@+id/frameLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/com_facebook_auth_dialog_cancel_background"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/frameLayout4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_imageView" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/profile_imageView5"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profile_imageView2"
+                    android:layout_width="182dp"
+                    android:layout_height="157dp"
+                    android:background="@color/colorAccent"
+                    android:src="@drawable/com_facebook_auth_dialog_cancel_background"
+                    app:layout_constraintStart_toEndOf="@+id/profile_imageView" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:src="@drawable/com_facebook_auth_dialog_cancel_background"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_imageView" />
-    </android.support.constraint.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
 
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profile_imageView3"
+                    android:layout_width="120dp"
+                    android:layout_height="100dp"
+                    android:background="@color/colorAccent"
+                    android:src="@drawable/com_facebook_auth_dialog_cancel_background" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/frameLayout6"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout5"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profile_imageView4"
+                    android:layout_width="120dp"
+                    android:layout_height="100dp"
+                    android:background="@color/colorAccent"
+                    android:src="@drawable/com_facebook_auth_dialog_cancel_background" />
+        </FrameLayout>
+
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout3">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profile_imageView5"
+                    android:layout_width="120dp"
+                    android:layout_height="100dp"
+                    android:background="@color/colorAccent"
+                    android:src="@drawable/com_facebook_auth_dialog_cancel_background"
+                    tools:layout_editor_absoluteX="256dp" />
+        </FrameLayout>
 </android.support.constraint.ConstraintLayout>
