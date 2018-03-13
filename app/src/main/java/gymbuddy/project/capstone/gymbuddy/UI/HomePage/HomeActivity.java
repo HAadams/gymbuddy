@@ -78,6 +78,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     public void onPhotosFragmentInteraction() {
 
         fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.home_down, R.anim.home_up, R.anim.pop_home_up, R.anim.pop_home_down);
 
         fragmentTransaction.replace(R.id.homeFragmentContainer, new EditProfileFragment()).addToBackStack(null);
 
@@ -90,8 +91,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.setCustomAnimations(R.anim.exit, R.anim.enter, R.anim.pop_exit, R.anim.pop_enter);
-        //todo test on device and fix accordingly
+        fragmentTransaction.setCustomAnimations(R.anim.exit_r, R.anim.enter_r, R.anim.pop_exit_r, R.anim.pop_enter_r);
 
         fragmentTransaction.replace(R.id.homeFragmentContainer, new MessengerFragment()).addToBackStack(null);
 
