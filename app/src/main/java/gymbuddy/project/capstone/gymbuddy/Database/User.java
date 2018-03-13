@@ -38,7 +38,7 @@ public class User {
     private void initPhotoArray(){
         photos = new ArrayList<>(MAX_PROFILE_PHOTOS_NUMBER);
         for(int i=0; i<MAX_PROFILE_PHOTOS_NUMBER; i++)
-            photos.add(null);
+            photos.add(new Photo());
     }
 
     public List<Photo> getPhotos() {
@@ -53,10 +53,9 @@ public class User {
         this.userID = userID;
     }
 
-    public void setPhotos(int position, Photo photo) {
-        this.photos.set(position, photo);
+    public void setPhotos(int position, String url) {
+        this.photos.get(position).setUrl(url);
     }
-
     public void setBirthday(String birthday) {
         this.birthday = birthday;
     }

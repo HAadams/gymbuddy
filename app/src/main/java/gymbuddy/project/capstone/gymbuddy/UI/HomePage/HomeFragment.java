@@ -75,11 +75,6 @@ public class HomeFragment extends Fragment {
         mSwipeView = rootView.findViewById(R.id.swipeView);
         mContext = getContext();
 
-        if(CurrentUser.getInstance().getPhotoURL() == null)
-            CurrentUser.getInstance().getUserDataFromDevice(getActivity());
-        else
-            CurrentUser.getInstance().SaveUserDataToDevice(getActivity());
-
         SimpleDraweeView v = rootView.findViewById(R.id.homeProfileButton);
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +86,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        System.out.println("IMAGE IS: "+ CurrentUser.getInstance().getPhotoURL());
         v.setImageURI(CurrentUser.getInstance().getPhotoURL());
 
         mSwipeView.getBuilder()

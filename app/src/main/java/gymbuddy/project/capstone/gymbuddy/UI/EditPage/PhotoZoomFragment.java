@@ -47,10 +47,8 @@ public class PhotoZoomFragment extends Fragment {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Photo tmp = new Photo();
-                tmp.setUrl(getArguments().getString(URL));
-                CurrentUser.getInstance().setPhotos(getArguments().getInt(POSITION), tmp);
-                FirebaseDatabaseHelper.getInstance().updateUserPhotos(getArguments().getInt(POSITION), tmp.getURL());
+                CurrentUser.getInstance().setPhotos(getArguments().getInt(POSITION), getArguments().getString(URL));
+                FirebaseDatabaseHelper.getInstance().updateUserPhotos(getArguments().getInt(POSITION), getArguments().getString(URL));
                 getFragmentManager().popBackStack();
                 getFragmentManager().popBackStack();
                 getFragmentManager().popBackStack();
