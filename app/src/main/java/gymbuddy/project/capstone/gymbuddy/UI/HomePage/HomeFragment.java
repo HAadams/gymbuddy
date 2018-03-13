@@ -86,7 +86,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        System.out.println("IMAGE IS: "+ CurrentUser.getInstance().getPhotoURL());
         v.setImageURI(CurrentUser.getInstance().getPhotoURL());
 
         mSwipeView.getBuilder()

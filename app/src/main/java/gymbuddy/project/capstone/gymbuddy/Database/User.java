@@ -32,6 +32,15 @@ public class User {
         likes = new ArrayList<>();
         liked = new ArrayList<>();
         friends = new ArrayList<>();
+        birthday = "";
+        gender = "";
+        email = "";
+        name = "";
+        longitude = "";
+        latitude = "";
+        fbUserID = "";
+        userID = "";
+
         initPhotoArray();
     }
 

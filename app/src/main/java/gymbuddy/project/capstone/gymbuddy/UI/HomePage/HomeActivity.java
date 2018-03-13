@@ -38,8 +38,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         Fresco.initialize(this);
 
+        // Load user data
         CurrentUser.getInstance().getUserDataFromDevice(this);
         CurrentUser.getInstance().getUserPhotosFromDevice(this);
+        CurrentUser.getInstance().getUserLatitudeFromDevice(this);
+        CurrentUser.getInstance().getUserLongitudeFromDevice(this);
 
         fdbh = FirebaseDatabaseHelper.getInstance();
 
