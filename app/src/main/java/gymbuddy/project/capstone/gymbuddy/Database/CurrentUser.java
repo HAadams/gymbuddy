@@ -30,6 +30,10 @@ public class CurrentUser extends User {
         editor.apply();
     }
 
+    public void saveUserPhotosToDevice(Context context){
+
+    }
+
     public void SaveUserLocationToDevice(Context context){
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         SharedPreferences sharedPreferences = context.getSharedPreferences("STRING", MODE_PRIVATE);
@@ -39,7 +43,7 @@ public class CurrentUser extends User {
         editor.apply();
     }
 
-    public void GetUserDataFromDevice(Context context){
+    public void getUserDataFromDevice(Context context){
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         SharedPreferences sharedPreferences = context.getSharedPreferences("STRING", MODE_PRIVATE);
         setPhotoURL(Uri.parse(sharedPreferences.getString(fdbh.PROFILE_PICTURE, null)));

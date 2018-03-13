@@ -193,7 +193,6 @@ public class FirebaseDatabaseHelper {
                 return;
             }
             fdbh.updateUserBirthdate(fdbh.currentUser.getBirthday());
-            fdbh.updateUserPhotos(0, fdbh.currentUser.getPhotoURL().toString());
             fdbh.updateUserEmail(fdbh.currentUser.getEmail());
             fdbh.updateUserGender(fdbh.currentUser.getGender());
             fdbh.updateUserName(fdbh.currentUser.getName());

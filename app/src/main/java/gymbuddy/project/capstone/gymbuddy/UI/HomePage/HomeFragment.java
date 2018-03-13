@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment {
         mContext = getContext();
 
         if(CurrentUser.getInstance().getPhotoURL() == null)
-            CurrentUser.getInstance().GetUserDataFromDevice(getActivity());
+            CurrentUser.getInstance().getUserDataFromDevice(getActivity());
         else
             CurrentUser.getInstance().SaveUserDataToDevice(getActivity());
 
