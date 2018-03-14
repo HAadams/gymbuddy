@@ -154,7 +154,6 @@ public class FirebaseDatabaseHelper {
     public void UploadUserDataToDatabase(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        currentUser.setName(user.getDisplayName());
         currentUser.setEmail(user.getEmail());
         currentUser.setPhotoURL(user.getPhotoUrl());
         FetchCurrentUserData();
@@ -229,6 +228,7 @@ public class FirebaseDatabaseHelper {
                                 currentUser.setBirthday(object.getString(BIRTHDAY));
                                 currentUser.setGender(object.getString(GENDER));
                                 currentUser.setFbUserID(object.getString(ID));
+                                currentUser.setName(object.getString(NAME));
                                 fetchComplete = true;
                             } catch (Exception e) {
                                 Log.e(getClass().toString(), "Error fetching user information");
