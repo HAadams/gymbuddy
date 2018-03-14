@@ -64,12 +64,8 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
             super(view);
             mView = view;
             simpleDraweeView = view.findViewById(R.id.simpleView);
-            mContentView =  view.findViewById(R.id.content);
+            mContentView =  view.findViewById(R.id.cardName);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 }
