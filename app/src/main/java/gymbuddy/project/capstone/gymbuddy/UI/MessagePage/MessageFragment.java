@@ -19,7 +19,7 @@ import gymbuddy.project.capstone.gymbuddy.R;
 
 public class MessageFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
+    // TODO: get rid of these if not needed
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_PARAM1 = "param1";//id
     private static final String ARG_PARAM2 = "param2";//title
@@ -114,12 +114,12 @@ public class MessageFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnListInteractionListener) {
-//            mListener = (OnListInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
+        if (context instanceof OnListInteractionListener) {
+            mListener = (OnListInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
     }
 
     @Override

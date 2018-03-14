@@ -41,7 +41,7 @@ public class MatchedRecyclerViewAdapter extends RecyclerView.Adapter<MatchedRecy
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onNavListFragmentInteraction(holder.mItem);
                 }
             }
         });
