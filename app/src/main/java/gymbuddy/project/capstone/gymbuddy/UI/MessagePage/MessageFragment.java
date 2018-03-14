@@ -71,45 +71,7 @@ public class MessageFragment extends Fragment {
 
        //todo users = get users that you have already started talking to
         users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
-        users.add(CurrentUser.getInstance());
+
 
 
             final Context context = view.getContext();
@@ -124,12 +86,26 @@ public class MessageFragment extends Fragment {
             }
 
 
-           recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
+            recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
 
             List<User> navTopics = new ArrayList<>();
             navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());
+        navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());
 
-            //navRV.setAdapter(new MatchedRecyclerViewAdapter(mListener, navTopics));
+
+
+
+            navRV.setAdapter(new MatchedRecyclerViewAdapter(navTopics, mListener));
 
         return view;
     }
