@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
 /**
@@ -46,9 +47,8 @@ public class PhotoZoomFragment extends Fragment {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Photo tmp = new Photo();
-                tmp.setUrl(getArguments().getString(URL));
-                CurrentUser.getInstance().setPhotos(getArguments().getInt(POSITION), tmp);
+                CurrentUser.getInstance().setPhotos(getArguments().getInt(POSITION), getArguments().getString(URL));
+                FirebaseDatabaseHelper.getInstance().updateUserPhotos(getArguments().getInt(POSITION), getArguments().getString(URL));
                 getFragmentManager().popBackStack();
                 getFragmentManager().popBackStack();
                 getFragmentManager().popBackStack();

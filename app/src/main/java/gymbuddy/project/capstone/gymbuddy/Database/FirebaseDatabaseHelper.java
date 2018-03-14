@@ -10,6 +10,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -50,6 +51,7 @@ public class FirebaseDatabaseHelper {
     private static final String LOCATIONS = "Locations";
     private static final String NAMES = "Names";
     private static final String EMAILS = "Emails";
+    private static final String USERS = "Users";
 
     public final String GENDER = "gender";
     public final String BIRTHDAY = "birthday";
@@ -61,7 +63,7 @@ public class FirebaseDatabaseHelper {
     public final String EMAIL = "email";
 
     private static Firebase rootRef, namesRef, locationsRef, gendersRef, birthdatesRef,
-            likesRef, likedRef, friendsRef, photosRef, emailsRef;
+            likesRef, likedRef, friendsRef, photosRef, emailsRef, usersRef;
 
     private boolean fetchComplete;
     private boolean errorOccured;
@@ -82,6 +84,71 @@ public class FirebaseDatabaseHelper {
         photosRef = rootRef.child(PHOTOS);
         namesRef = rootRef.child(NAMES);
         emailsRef = rootRef.child(EMAILS);
+        usersRef = rootRef.child(USERS);
+
+        setListeners();
+    }
+
+    public void setListeners(){
+        likesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println("VALUE CHANGED YO "+dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        likedRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void updateLikes(String id){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        likesRef.child(user.getUid()).child(id).setValue(id);
     }
 
     public void UploadUserDataToDatabase(){
@@ -133,6 +200,12 @@ public class FirebaseDatabaseHelper {
         birthdatesRef.child(user.getUid()).setValue(birthdate);
     }
 
+    public void addUserIdToDatabase(){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        usersRef.child(user.getUid()).setValue(user.getUid());
+
+    }
     public void updateUserName(String name){
         namesRef.child(user.getUid()).setValue(name);
     }
@@ -193,10 +266,10 @@ public class FirebaseDatabaseHelper {
                 return;
             }
             fdbh.updateUserBirthdate(fdbh.currentUser.getBirthday());
-            fdbh.updateUserPhotos(0, fdbh.currentUser.getPhotoURL().toString());
             fdbh.updateUserEmail(fdbh.currentUser.getEmail());
             fdbh.updateUserGender(fdbh.currentUser.getGender());
             fdbh.updateUserName(fdbh.currentUser.getName());
+            fdbh.addUserIdToDatabase();
         }
     }
 }

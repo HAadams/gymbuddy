@@ -38,6 +38,12 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         Fresco.initialize(this);
 
+        // Load user data
+        CurrentUser.getInstance().getUserDataFromDevice(this);
+        CurrentUser.getInstance().getUserPhotosFromDevice(this);
+        CurrentUser.getInstance().getUserLatitudeFromDevice(this);
+        CurrentUser.getInstance().getUserLongitudeFromDevice(this);
+
         fdbh = FirebaseDatabaseHelper.getInstance();
 
         context = this;
@@ -111,6 +117,14 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         fragmentTransaction.commit();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        CurrentUser.getInstance().SaveUserDataToDevice(this);
+        CurrentUser.getInstance().SaveUserLocationToDevice(this);
+        CurrentUser.getInstance().SaveUserPhotosToDevice(this);
     }
 
     @Override

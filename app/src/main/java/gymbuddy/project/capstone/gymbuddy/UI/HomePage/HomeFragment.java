@@ -75,11 +75,6 @@ public class HomeFragment extends Fragment {
         mSwipeView = rootView.findViewById(R.id.swipeView);
         mContext = getContext();
 
-        if(CurrentUser.getInstance().getPhotoURL() == null)
-            CurrentUser.getInstance().GetUserDataFromDevice(getActivity());
-        else
-            CurrentUser.getInstance().SaveUserDataToDevice(getActivity());
-
         SimpleDraweeView v = rootView.findViewById(R.id.homeProfileButton);
 
         v.setOnClickListener(new View.OnClickListener() {
