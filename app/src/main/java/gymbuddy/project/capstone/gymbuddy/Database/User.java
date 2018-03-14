@@ -94,7 +94,7 @@ public class User {
     }
 
     public void setPhotoURL(Uri photoURL) {
-        this.photoURL = photoURL;
+        this.photos.get(0).setUrl(photoURL.toString());
     }
 
     public String getBirthday() {
@@ -130,7 +130,9 @@ public class User {
     }
 
     public Uri getPhotoURL() {
-        return photoURL;
+        if(photos.get(0).getURL() != null)
+            return Uri.parse(photos.get(0).getURL());
+        return null;
     }
 
     public void clearAlbums(){albums.clear();}
