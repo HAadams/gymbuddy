@@ -22,8 +22,9 @@ import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.MessageFragment;
+import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.OnListInteractionListener;
 
-public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MessageFragment.OnListFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, OnListInteractionListener{
 
     Context context;
 
@@ -127,13 +128,14 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         CurrentUser.getInstance().SaveUserPhotosToDevice(this);
     }
 
+
     @Override
-    public void onNavListFragmentInteraction(User item) {
+    public void onListFragmentInteraction(User mItem) {
 
     }
 
     @Override
-    public void onListFragmentInteraction(User item) {
+    public void onNavListFragmentInteraction(User item) {
 
     }
 }

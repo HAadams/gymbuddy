@@ -6,6 +6,8 @@ import gymbuddy.project.capstone.gymbuddy.Database.User;
  * Created by arhamakbar on 3/12/18.
  */
 
-interface OnListInteractionListener {
-    void onListFragmentInteraction(User mItem);
+public interface  OnListInteractionListener {
+     void onListFragmentInteraction(User mItem);
+
+     void onNavListFragmentInteraction(User item);
 }
