@@ -85,7 +85,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
         v.setImageURI(CurrentUser.getInstance().getPhotoURL());
 
         mSwipeView.getBuilder()
