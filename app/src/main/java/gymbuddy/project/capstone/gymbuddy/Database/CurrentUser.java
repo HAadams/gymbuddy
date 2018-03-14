@@ -36,7 +36,8 @@ public class CurrentUser extends User {
         editor.putString(fdbh.NAME, getName());
         editor.putString(fdbh.EMAIL, getGender());
         editor.putString(fdbh.BIRTHDAY, getBirthday());
-        editor.putString(fdbh.PROFILE_PICTURE, getPhotoURL().toString());
+        if(getPhotoURL() != null)
+            editor.putString(fdbh.PROFILE_PICTURE, getPhotoURL().toString());
         editor.apply();
     }
 
@@ -47,9 +48,6 @@ public class CurrentUser extends User {
         String url = "";
         String key = "";
         for(int i=0; i<photos.size(); i++){
-            if(photos.get(i) == null){
-                url = "null";
-            }
             switch(i){
                 case 0:
                     key = PROFILE_PICTURE0;
