@@ -42,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         CurrentUser.getInstance().getUserPhotosFromDevice(this);
         CurrentUser.getInstance().getUserLatitudeFromDevice(this);
         CurrentUser.getInstance().getUserLongitudeFromDevice(this);
+        CurrentUser.getInstance().getUserAltitudeFromDevice(this);
 
         fdbh = FirebaseDatabaseHelper.getInstance();
 

@@ -17,11 +17,13 @@ public class User {
     private String name;
     private String longitude;
     private String latitude;
+    private String altitude;
+
+
     private String fbUserID;
     private String userID;
     private List<Album> albums;
     private List<Photo> photos; // List of profile pictures that user chooses
-    private Uri photoURL;
 
     private List<User> likes;
     private List<User> liked;
@@ -38,6 +40,7 @@ public class User {
         name = "";
         longitude = "";
         latitude = "";
+        altitude = "";
         fbUserID = "";
         userID = "";
 
@@ -115,6 +118,14 @@ public class User {
 
     public String getLongitude() {
         return longitude;
+    }
+
+    public String getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(String altitude) {
+        this.altitude = altitude;
     }
 
     public String getLatitude() {

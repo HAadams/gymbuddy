@@ -46,6 +46,7 @@ public class LocationHelper implements android.location.LocationListener{
 
     private double latitude; // latitude
     private double longitude; // longitude
+    private double altitude;
 
     // Updates will trigger once user location changes by this distance
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // Meters
@@ -62,10 +63,9 @@ public class LocationHelper implements android.location.LocationListener{
     }
 
     private void setUserLocationInDB(){
-
         firebaseDatabaseHelper.updateLatitudeLocation(latitude);
         firebaseDatabaseHelper.updateLongitudeLocation(longitude);
-
+        firebaseDatabaseHelper.updateAltitudeLocation(altitude);
     }
 
     public Location updateUserLocation() {
@@ -108,6 +108,7 @@ public class LocationHelper implements android.location.LocationListener{
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+                altitude = location.getAltitude();
             }else
                 Log.e(this.getClass().toString(), "Location object is null");
         }
@@ -125,6 +126,7 @@ public class LocationHelper implements android.location.LocationListener{
         if(location != null){
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+            altitude = location.getAltitude();
             setUserLocationInDB();
         }
     }

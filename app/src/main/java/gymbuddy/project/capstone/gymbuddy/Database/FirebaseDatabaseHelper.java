@@ -57,6 +57,7 @@ public class FirebaseDatabaseHelper {
     public final String BIRTHDAY = "birthday";
     public final String LATITUDE = "latitude";
     public final String LONGITUDE = "longitude";
+    public final String ALTITUDE = "altitude";
     public final String NAME = "name";
     public final String ID = "id";
     public final String PROFILE_PICTURE = "profile_picture";
@@ -171,6 +172,13 @@ public class FirebaseDatabaseHelper {
         if(user == null) return;
         currentUser.setLongitude(longitude.toString());
         locationsRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.getLongitude());
+    }
+
+    public void updateAltitudeLocation(Double altitude){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        currentUser.setAltitude(altitude.toString());
+        locationsRef.child(user.getUid()).child(ALTITUDE).setValue(currentUser.getAltitude());
     }
 
     public void updateUserPhotos(Integer index, String url){

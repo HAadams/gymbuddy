@@ -122,6 +122,7 @@ public class CurrentUser extends User {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(fdbh.LATITUDE, getLatitude());
         editor.putString(fdbh.LONGITUDE, getLongitude());
+        editor.putString(fdbh.ALTITUDE, getAltitude());
         editor.apply();
     }
 
@@ -135,6 +136,12 @@ public class CurrentUser extends User {
         setGender(sharedPreferences.getString(fdbh.GENDER, getGender()));
         setEmail(sharedPreferences.getString(fdbh.EMAIL, getEmail()));
         setName(sharedPreferences.getString(fdbh.NAME, getName()));
+    }
+
+    public void getUserAltitudeFromDevice(Context context){
+        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("STRING", MODE_PRIVATE);
+        setAltitude(sharedPreferences.getString(fdbh.ALTITUDE, getAltitude()));
     }
 
     public void getUserLatitudeFromDevice(Context context){
