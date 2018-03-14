@@ -67,7 +67,7 @@ public class FirebaseDatabaseHelper {
 
     private boolean fetchComplete;
     private boolean errorOccured;
-    private CurrentUser currentUser;
+    public CurrentUser currentUser;
     private static FirebaseUser user;
 
     private FirebaseDatabaseHelper(){

@@ -37,7 +37,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setContentView(R.layout.activity_home);
 
         Fresco.initialize(this);
-
         // Load user data
         CurrentUser.getInstance().getUserDataFromDevice(this);
         CurrentUser.getInstance().getUserPhotosFromDevice(this);
