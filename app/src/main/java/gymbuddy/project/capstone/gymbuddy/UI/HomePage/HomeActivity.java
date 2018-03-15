@@ -41,10 +41,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         // Load user data
         CurrentUser.getInstance().getUserDataFromDevice(this);
         CurrentUser.getInstance().getUserPhotosFromDevice(this);
-        CurrentUser.getInstance().getUserLatitudeFromDevice(this);
-        CurrentUser.getInstance().getUserLongitudeFromDevice(this);
-        CurrentUser.getInstance().getUserAltitudeFromDevice(this);
-
+        CurrentUser.getInstance().getUserLocationFromDevice(this);
+        
         fdbh = FirebaseDatabaseHelper.getInstance();
 
         context = this;
@@ -123,11 +121,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     @Override
     protected void onStop() {
         super.onStop();
-        CurrentUser.getInstance().SaveUserDataToDevice(this);
+        CurrentUser.getInstance().saveUserDataToDevice(this);
         CurrentUser.getInstance().SaveUserLocationToDevice(this);
-        CurrentUser.getInstance().SaveUserPhotosToDevice(this);
+        CurrentUser.getInstance().saveUserPhotosToDevice(this);
     }
-
 
     @Override
     public void onListFragmentInteraction(User mItem) {

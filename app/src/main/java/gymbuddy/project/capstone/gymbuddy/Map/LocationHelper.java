@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.firebase.client.DataSnapshot;
+
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -31,6 +33,9 @@ public class LocationHelper implements android.location.LocationListener{
         }
         return initialInstance;
     }
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+    public static final String ALTITUDE = "altitude";
 
     private Activity activity;
 
@@ -173,5 +178,34 @@ public class LocationHelper implements android.location.LocationListener{
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
 
         return Math.sqrt(distance);
+    }
+
+    public static Double[] getLocationFromSnapshot(DataSnapshot snapshot){
+        /*
+        Returns an array of size 3
+
+            Index:
+                0 : Altitude
+                1 : Latitude
+                2 : Longitude
+
+         */
+        Double[] location = new Double[3];
+        for(DataSnapshot data: snapshot.getChildren()){
+            switch (data.getKey()){
+                case ALTITUDE:
+                    location[0] = Double.valueOf(data.getValue().toString());
+                    break;
+                case LATITUDE:
+                    location[1] = Double.valueOf(data.getValue().toString());
+                    break;
+                case LONGITUDE:
+                    location[2] = Double.valueOf(data.getValue().toString());
+                    break;
+                default:
+                    break;
+            }
+        }
+        return location;
     }
 }

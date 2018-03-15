@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.facebook.AccessToken;
@@ -15,11 +16,19 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.wearable.DataApi;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
 
@@ -42,16 +51,21 @@ public class FirebaseDatabaseHelper {
     }
 
     private static final String FIREBASE_DATABASE_URL = "https://gymbuddy-a1579.firebaseio.com";
-    private static final String GENDERS = "Genders";
+    private static final String GENDERS = "Gender";
     private static final String PHOTOS = "Photos";
-    private static final String BIRTHDATES = "Birthdates";
+    private static final String BIRTHDATES = "Birthdate";
     private static final String LIKES = "Likes";
     private static final String LIKED = "Liked";
     private static final String FRIENDS = "Friends";
-    private static final String LOCATIONS = "Locations";
-    private static final String NAMES = "Names";
-    private static final String EMAILS = "Emails";
+    private static final String LOCATIONS = "Location";
+    private static final String NAMES = "Name";
+    private static final String EMAILS = "Email";
     private static final String USERS = "Users";
+    private static final String UNLIKES = "Unlikes";
+    private static final String FEMALE = "female";
+    private static final String MALE = "male";
+    private static final String OTHER = "other";
+
 
     public final String GENDER = "gender";
     public final String BIRTHDAY = "birthday";
@@ -62,35 +76,49 @@ public class FirebaseDatabaseHelper {
     public final String ID = "id";
     public final String PROFILE_PICTURE = "profile_picture";
     public final String EMAIL = "email";
+    public final String MIN_AGE = "min_age";
+    public final String MAX_AGE = "max_age";
+    public final String PERFERRED_DISTANCE = "perferred_distance";
+    public final String PERFERRED_GENDER = "perferred_gender";
 
     private static Firebase rootRef, namesRef, locationsRef, gendersRef, birthdatesRef,
-            likesRef, likedRef, friendsRef, photosRef, emailsRef, usersRef;
+            likesRef, likedRef, friendsRef, photosRef, emailsRef, usersRef, unlikesRef, currentUserRef;
 
     private boolean fetchComplete;
     private boolean errorOccured;
     public CurrentUser currentUser;
     private static FirebaseUser user;
+    public Map<String, User> users_from_database;
+    public Map<String, User> users_from_device;
 
     private FirebaseDatabaseHelper(){
-        fetchComplete = false;
-        errorOccured = false;
-        currentUser = CurrentUser.getInstance();
-        rootRef = new Firebase(FIREBASE_DATABASE_URL);
-        locationsRef = rootRef.child(LOCATIONS);
-        gendersRef = rootRef.child(GENDERS);
-        birthdatesRef = rootRef.child(BIRTHDATES);
-        likesRef = rootRef.child(LIKES);
-        likedRef = rootRef.child(LIKED);
-        friendsRef = rootRef.child(FRIENDS);
-        photosRef = rootRef.child(PHOTOS);
-        namesRef = rootRef.child(NAMES);
-        emailsRef = rootRef.child(EMAILS);
-        usersRef = rootRef.child(USERS);
-
+        initObjects();
         setListeners();
+        getUsersGroup();
     }
 
-    public void setListeners(){
+    private void initObjects(){
+        fetchComplete = false;
+        errorOccured = false;
+        users_from_database = new HashMap<String, User>();
+        users_from_device = new HashMap<String, User>();
+        currentUser = CurrentUser.getInstance();
+        rootRef = new Firebase(FIREBASE_DATABASE_URL);
+        usersRef = rootRef.child(USERS);
+        currentUserRef = usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        locationsRef = currentUserRef.child(LOCATIONS);
+        gendersRef = currentUserRef.child(GENDERS);
+        birthdatesRef = currentUserRef.child(BIRTHDATES);
+        likesRef = currentUserRef.child(LIKES);
+        likedRef = currentUserRef.child(LIKED);
+        friendsRef = currentUserRef.child(FRIENDS);
+        photosRef = currentUserRef.child(PHOTOS);
+        namesRef = currentUserRef.child(NAMES);
+        emailsRef = currentUserRef.child(EMAILS);
+        unlikesRef = currentUserRef.child(UNLIKES);
+    }
+
+    private void setListeners(){
         likesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -146,6 +174,155 @@ public class FirebaseDatabaseHelper {
         });
     }
 
+    public void getUsersGroup(){
+        /*
+        Here, we get all the users to display to the current user.
+        Filter based on following cases:
+            1. Must be within age limit set by user
+            2. Must be within distance limit set by user
+            3. Must be of the gender the user requests (Male, Female, Both)
+
+        Additional filtering should be done based on the following
+            1. If the user is on the current user's "unlike" list (includes blocked)
+            2. If the user is on the other user's "unlike" list
+
+        Objects are of the following JSON format:
+
+        Users:
+                USER_ID
+                        NAME:       name
+                        Birthday:   birthday
+                        Email:      email
+                        Gender:     gender
+                        Likes:
+                                USER_ID0, UserID1...etc
+                        Liked:
+                                USER_ID0, UserID2...etc
+                        Friends:
+                                USER_ID4...etc
+                        Unlikes:
+                                USER_ID7...etc
+                        Location:
+                                Altitude:   0.0
+                                Latitude:   0.0
+                                Longitude:  0.0
+                        Photos:
+                            1.  url
+                            2.  url
+                            .
+                            .
+                            4.  url
+
+         */
+
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // This iterates over the list of users
+                for(DataSnapshot user: dataSnapshot.getChildren()){
+                    // user.getKey() returns the USER_ID
+                    // If user is current user, skip.
+                    if(user.getKey().equalsIgnoreCase(currentUser.getUserID())) continue;
+                    // If user is on the current user's unlikes list, skip.
+                    if(currentUser.getUnlikes().get(user.getKey()) != null) continue;
+                    // If user already liked this person (exists in liked list), skip.
+                    if(currentUser.getLikes().get(user.getKey()) != null) continue;
+                    // Get the new user
+                    User u = getNewUser(user);
+                    // If null, it means the user doesn't match the current user's criteria, skip.
+                    if(u == null) continue;
+                    // If current user is on the user's liked list
+                    // means current user already liked this person, skip.
+                    if(u.getLiked().get(currentUser.getUserID()) != null) continue;
+                    // If current user is on the other user's unlikes list, skip.
+                    if(u.getUnlikes().get(currentUser.getUserID()) != null) continue;
+                    // Otherwise, add this person to the list to be displayed
+                    users_from_database.put(u.getUserID(), u);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
+    private User getNewUser(DataSnapshot user){
+
+        // First, get user's criteria
+        Integer p_distance, min_age, max_age;
+        String p_gender;
+        p_distance = currentUser.getPerferredDistance();
+        p_gender = currentUser.getPerferredGender();
+        min_age = currentUser.getMinAge();
+        max_age = currentUser.getMaxAge();
+
+        Integer tmp_age;
+        String tmp_birthday;
+        String tmp_gender;
+
+        User n = new User(user.getKey());
+
+        for(DataSnapshot info: user.getChildren()){
+            n.setUserID(info.getKey());
+            switch(info.getKey()){
+                case PHOTOS:
+                    for(DataSnapshot photo: info.getChildren())
+                        n.setPhotos(Integer.parseInt(photo.getKey()), photo.getValue().toString());
+                case NAME:
+                    n.setName(info.getValue().toString());
+                    break;
+                case GENDER:
+                    // filter by gender preference.
+                    tmp_gender = info.getValue().toString();
+                    if (!tmp_gender.equalsIgnoreCase(p_gender))
+                        return null;
+
+                    n.setGender(tmp_gender);
+                    break;
+                case BIRTHDAY:
+                    // filter by age limits
+                    tmp_birthday = info.getValue().toString();
+                    tmp_age = User.getUserAge(tmp_birthday);
+                    if( !(tmp_age >= min_age && tmp_age <= max_age) )
+                        return null;
+
+                    n.setBirthday(tmp_birthday);
+                    n.setAge(tmp_age);
+
+                    break;
+                case LOCATIONS:
+                    // filter by distance
+                    Double[] user_loc = LocationHelper.getLocationFromSnapshot(info);
+                    Double distance = LocationHelper.distance(
+                            Double.valueOf(currentUser.getLatitude()),
+                            Double.valueOf(currentUser.getLongitude()),
+                            Double.valueOf(currentUser.getAltitude()),
+                            user_loc[1],
+                            user_loc[2],
+                            user_loc[0]);
+
+                    if( !(Math.abs(distance) <= p_distance) )
+                        return null;
+
+                    n.setAltitude(user_loc[0].toString());
+                    n.setLatitude(user_loc[1].toString());
+                    n.setLongitude(user_loc[2].toString());
+
+                    break;
+
+
+                default:
+                    break;
+            }
+
+        }
+
+        return n;
+    }
     public void updateLikes(String id){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
@@ -156,6 +333,7 @@ public class FirebaseDatabaseHelper {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setPhotoURL(user.getPhotoUrl());
+        currentUser.setUserID(user.getUid());
         FetchCurrentUserData();
         new UserDataUpdater().execute();
     }
@@ -164,58 +342,69 @@ public class FirebaseDatabaseHelper {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setLatitude(latitude.toString());;
-        locationsRef.child(user.getUid()).child(LATITUDE).setValue(currentUser.getLatitude());
+        locationsRef.child(LATITUDE).setValue(currentUser.getLatitude());
     }
 
     public void updateLongitudeLocation(Double longitude){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setLongitude(longitude.toString());
-        locationsRef.child(user.getUid()).child(LONGITUDE).setValue(currentUser.getLongitude());
+        locationsRef.child(LONGITUDE).setValue(currentUser.getLongitude());
     }
 
     public void updateAltitudeLocation(Double altitude){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setAltitude(altitude.toString());
-        locationsRef.child(user.getUid()).child(ALTITUDE).setValue(currentUser.getAltitude());
+        locationsRef.child(ALTITUDE).setValue(currentUser.getAltitude());
     }
 
     public void updateUserPhotos(Integer index, String url){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        Firebase deepPhotosRef = photosRef.child(user.getUid());
-        deepPhotosRef.child(index.toString()).setValue(url);
+        photosRef.child(index.toString()).setValue(url);
     }
 
     public void updateUserEmail(String email){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        emailsRef.child(user.getUid()).setValue(email);
+        emailsRef.setValue(email);
     }
 
     public void updateUserGender(String gender){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        gendersRef.child(user.getUid()).setValue(gender);
+        gendersRef.setValue(gender);
     }
 
     public void updateUserBirthdate(String birthdate){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        birthdatesRef.child(user.getUid()).setValue(birthdate);
+        birthdatesRef.setValue(birthdate);
     }
 
-    public void addUserIdToDatabase(){
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null) return;
-        usersRef.child(user.getUid()).setValue(user.getUid());
-
-    }
     public void updateUserName(String name){
-        namesRef.child(user.getUid()).setValue(name);
+        namesRef.setValue(name);
     }
 
+    public void updateUserSearchSettings(Integer minAge, Integer maxAge, Integer p_distance, String p_gender){
+        currentUserRef.child(PERFERRED_GENDER).setValue(p_gender);
+        currentUserRef.child(PERFERRED_DISTANCE).setValue(p_distance);
+        currentUserRef.child(MIN_AGE).setValue(minAge);
+        currentUserRef.child(MAX_AGE).setValue(maxAge);
+    }
+
+    public void setDefaultUserSearchSettings(){
+        String perferred_gender;
+        if(currentUser.getGender().equalsIgnoreCase(FEMALE))
+            perferred_gender = MALE;
+        else if(currentUser.getGender().equalsIgnoreCase(MALE))
+            perferred_gender = FEMALE;
+        else
+            perferred_gender = OTHER;
+
+        updateUserSearchSettings(18, 100, 100, perferred_gender);
+    }
     private boolean isErrorOccured(){return errorOccured;}
 
     private boolean isFetchComplete(){return fetchComplete;}
@@ -277,7 +466,7 @@ public class FirebaseDatabaseHelper {
             fdbh.updateUserEmail(fdbh.currentUser.getEmail());
             fdbh.updateUserGender(fdbh.currentUser.getGender());
             fdbh.updateUserName(fdbh.currentUser.getName());
-            fdbh.addUserIdToDatabase();
+            fdbh.setDefaultUserSearchSettings();
         }
     }
 }
