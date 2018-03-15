@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -139,6 +141,7 @@ public class User {
         likes = new HashMap<>();
         liked = new HashMap<>();
         friends = new HashMap<>();
+        unlikes = new HashMap<>();
         birthday = "";
         gender = "";
 
@@ -291,7 +294,7 @@ public class User {
         }
     }
 
-    public void SaveUserLocationToDevice(Context context){
+    public void saveUserLocationToDevice(Context context){
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         SharedPreferences sharedPreferences = context.getSharedPreferences("STRING", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -310,6 +313,7 @@ public class User {
         setBirthday(sharedPreferences.getString((fdbh.BIRTHDAY+getUserID()), getBirthday()));
         setGender(sharedPreferences.getString((fdbh.GENDER+getUserID()), getGender()));
         setName(sharedPreferences.getString((fdbh.NAME+getUserID()), getName()));
+        setUserID(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     public void getUserAltitudeFromDevice(Context context){

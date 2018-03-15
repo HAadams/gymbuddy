@@ -38,11 +38,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         setContentView(R.layout.activity_home);
 
         Fresco.initialize(this);
-        // Load user data
-        CurrentUser.getInstance().getUserDataFromDevice(this);
-        CurrentUser.getInstance().getUserPhotosFromDevice(this);
-        CurrentUser.getInstance().getUserLocationFromDevice(this);
-        
+
         fdbh = FirebaseDatabaseHelper.getInstance();
 
         context = this;
@@ -58,12 +54,25 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // Load user data
+        CurrentUser.getInstance().getUserDataFromDevice(this);
+        CurrentUser.getInstance().getUserPhotosFromDevice(this);
+        CurrentUser.getInstance().getUserLocationFromDevice(this);
+        CurrentUser.getInstance().getUserLikedFromDevice(this);
+        CurrentUser.getInstance().getUserLikesFromDevice(this);
+        CurrentUser.getInstance().getUserUnlikesFromDevice(this);
+        CurrentUser.getInstance().getUserFriendsFromDevice(this);
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
-            CurrentUser.getInstance().SaveUserLocationToDevice(this);
+            CurrentUser.getInstance().saveUserLocationToDevice(this);
         }
 
     }
@@ -122,8 +131,12 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     protected void onStop() {
         super.onStop();
         CurrentUser.getInstance().saveUserDataToDevice(this);
-        CurrentUser.getInstance().SaveUserLocationToDevice(this);
+        CurrentUser.getInstance().saveUserLocationToDevice(this);
         CurrentUser.getInstance().saveUserPhotosToDevice(this);
+        CurrentUser.getInstance().saveUserLikedToDevice(this);
+        CurrentUser.getInstance().saveUserLikesToDevice(this);
+        CurrentUser.getInstance().saveUserUnlikesToDevice(this);
+        CurrentUser.getInstance().saveUserFriendsToDevice(this);
     }
 
     @Override

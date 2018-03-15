@@ -17,7 +17,9 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
 
 /**
@@ -71,7 +73,9 @@ public class TinderCard {
     @SwipeInState
     private void onSwipeInState(){
         Log.d("EVENT", "onSwipeInState");
-        FirebaseDatabaseHelper.getInstance().updateLikes("I AM SPARTA");
+        FirebaseDatabaseHelper.getInstance().updateLikes(CurrentUser.getInstance().getUserID());
+        CurrentUser.getInstance().getLikes().put(CurrentUser.getInstance().getUserID(), new User());
+
     }
 
     @SwipeOutState

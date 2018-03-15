@@ -326,7 +326,7 @@ public class FirebaseDatabaseHelper {
     public void updateLikes(String id){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        likesRef.child(user.getUid()).child(id).setValue(id);
+        likesRef.child(id).setValue(id);
     }
 
     public void UploadUserDataToDatabase(){
