@@ -66,7 +66,6 @@ public class FirebaseDatabaseHelper {
     private static final String MALE = "male";
     private static final String OTHER = "other";
 
-
     public final String GENDER = "gender";
     public final String BIRTHDAY = "birthday";
     public final String LATITUDE = "latitude";
@@ -190,10 +189,14 @@ public class FirebaseDatabaseHelper {
 
         Users:
                 USER_ID
-                        NAME:       name
+                        NAME:       John Doe
                         Birthday:   birthday
                         Email:      email
-                        Gender:     gender
+                        Gender:     male
+                        minAge:     18
+                        maxAge:     100
+                        p_dist:     100
+                        p_gend:     female
                         Likes:
                                 USER_ID0, UserID1...etc
                         Liked:
@@ -226,18 +229,12 @@ public class FirebaseDatabaseHelper {
                     if(user.getKey().equalsIgnoreCase(currentUser.getUserID())) continue;
                     // If user is on the current user's unlikes list, skip.
                     if(currentUser.getUnlikes().get(user.getKey()) != null) continue;
-                    // If user already liked this person (exists in liked list), skip.
+                    // If user already liked this person (exists in likes list), skip.
                     if(currentUser.getLikes().get(user.getKey()) != null) continue;
                     // Get the new user
                     User u = getNewUser(user);
                     // If null, it means the user doesn't match the current user's criteria, skip.
                     if(u == null) continue;
-                    // If current user is on the user's liked list
-                    // means current user already liked this person, skip.
-                    if(u.getLiked().get(currentUser.getUserID()) != null) continue;
-                    // If current user is on the other user's unlikes list, skip.
-                    if(u.getUnlikes().get(currentUser.getUserID()) != null) continue;
-                    // Otherwise, add this person to the list to be displayed
                     users_from_database.put(u.getUserID(), u);
                 }
             }
@@ -247,12 +244,14 @@ public class FirebaseDatabaseHelper {
 
             }
         });
-
-
     }
+
     private User getNewUser(DataSnapshot user){
 
-        // First, get user's criteria
+        /*
+        This method convertes teh DataSnapshot object to a user object.
+        It also does the filtering based on min_age, max_age, preferred distance and preferred gender.
+        */
         Integer p_distance, min_age, max_age;
         String p_gender;
         p_distance = currentUser.getPerferredDistance();
@@ -262,7 +261,8 @@ public class FirebaseDatabaseHelper {
 
         Integer tmp_age;
         String tmp_birthday;
-        String tmp_gender;
+        String tmp_gender, tmp_preferred_gender;
+        Integer tmp_minAge, tmp_maxAge;
 
         User n = new User(user.getKey());
 
@@ -314,7 +314,36 @@ public class FirebaseDatabaseHelper {
 
                     break;
 
+                case MIN_AGE:
+                    // If the current user's age is not within the user's age limit, skip
+                    tmp_minAge = Integer.parseInt(info.getValue().toString());
+                    if(currentUser.getAge() < tmp_minAge) return null;
+                    n.setMinAge(tmp_minAge);
+                    break;
 
+                case MAX_AGE:
+                    // If the current user's age is not within the user's age limit, skip
+                    tmp_maxAge = Integer.parseInt(info.getValue().toString());
+                    if(currentUser.getAge() > tmp_maxAge) return null;
+                    n.setMaxAge(tmp_maxAge);
+                    break;
+
+                case PERFERRED_DISTANCE:
+                    n.setPerferredDistance(Integer.parseInt(info.getValue().toString()));
+                    break;
+
+                case PERFERRED_GENDER:
+                    tmp_preferred_gender = info.getValue().toString();
+                    if(!tmp_preferred_gender.equalsIgnoreCase(currentUser.getGender())) return null;
+                    n.setPerferredGender(tmp_preferred_gender);
+                    break;
+
+                case UNLIKES:
+                    // If the current user exists on the user's unlikes list, don't show them
+                    for(DataSnapshot u_id: info.getChildren())
+                        if(currentUser.getUserID().equalsIgnoreCase(u_id.getKey())) return null;
+
+                    break;
                 default:
                     break;
             }
@@ -405,6 +434,7 @@ public class FirebaseDatabaseHelper {
 
         updateUserSearchSettings(18, 100, 100, perferred_gender);
     }
+
     private boolean isErrorOccured(){return errorOccured;}
 
     private boolean isFetchComplete(){return fetchComplete;}

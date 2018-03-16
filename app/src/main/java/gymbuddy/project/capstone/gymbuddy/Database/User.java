@@ -28,6 +28,7 @@ public class User {
     public static final String USER_UNLIKES = "user_unlikes_";
     public static final String SIZE = "size";
 
+
     private String birthday;
     private Integer age;
     private Integer minAge;
@@ -181,6 +182,7 @@ public class User {
     }
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+        this.age = getUserAge(this.birthday);
     }
 
     public void setGender(String gender) {
