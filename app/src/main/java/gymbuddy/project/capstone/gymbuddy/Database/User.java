@@ -182,7 +182,6 @@ public class User {
     }
     public void setBirthday(String birthday) {
         this.birthday = birthday;
-        this.age = getUserAge(this.birthday);
     }
 
     public void setGender(String gender) {

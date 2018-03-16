@@ -456,6 +456,7 @@ public class FirebaseDatabaseHelper {
                                 currentUser.setFbUserID(object.getString(ID));
                                 currentUser.setName(object.getString(NAME));
                                 currentUser.setEmail(object.getString(EMAIL));
+                                currentUser.setAge(User.getUserAge(currentUser.getBirthday()));
                                 fetchComplete = true;
                             } catch (Exception e) {
                                 Log.e(getClass().toString(), "Error fetching user information");
