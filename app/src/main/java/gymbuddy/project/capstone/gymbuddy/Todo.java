@@ -11,13 +11,14 @@ package gymbuddy.project.capstone.gymbuddy;
 //  Add mapBox fragment
 //  Add profile fragment
 //  Modify cards to have more information plus add touchAndHold methods
-//  Add message fragment
+//  Add message fragment => add message object
 //  If performance is not ideal on Nexus 5X, look at activities as alternatives
 //  
 //
 //
 //  Hussein:
 //  Add profile edit fragment
+
 //
 //  Only implement the below two points after creating the Edit profile page activity/fragment.
 //  ---------------------------------------------------------------------------------------

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.login.LoginManager;
@@ -95,11 +96,29 @@ public class HomeFragment extends Fragment {
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
+        if (mSwipeView!=null) {
+            for (Profile profile : Utils.loadProfiles(mContext)) {
+                mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView, new cardTapToProfileCallback() {
+                    @Override
+                    public void onTap(Profile profile) {
+                        Toast.makeText(getContext(),"tap for dat ass" ,
+                                Toast.LENGTH_SHORT).show();
+                    }
 
-        for(Profile profile : Utils.loadProfiles(mContext)){
-            mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
+                    @Override
+                    public void onReject(Profile profile) {
+                        Toast.makeText(getContext(),"too fat",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAccept(Profile profile) {
+                        Toast.makeText(getContext(),"short and white" ,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }));
+            }
         }
-
         rootView.findViewById(R.id.homeMapButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,6 +166,9 @@ public class HomeFragment extends Fragment {
 
         return rootView;
     }
+
+
+
 
     public void onLogoutButtonPressed() {
         if (mListener != null) {

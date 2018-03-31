@@ -1,12 +1,15 @@
 package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
+import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
@@ -21,6 +24,7 @@ import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 
 /**
  * Created by New User on 2/15/2018.
@@ -41,10 +45,13 @@ public class TinderCard {
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
 
-    public TinderCard(Context context, Profile profile, SwipePlaceHolderView swipeView) {
+    final cardTapToProfileCallback rootCallback;
+
+    public TinderCard(Context context, Profile profile, SwipePlaceHolderView swipeView, cardTapToProfileCallback callback) {
         mContext = context;
         mProfile = profile;
         mSwipeView = swipeView;
+        rootCallback = callback;
     }
 
     @Resolve
@@ -54,10 +61,20 @@ public class TinderCard {
         locationNameTxt.setText(mProfile.getLocation());
     }
 
+    @Click(R.id.tinderCard)
+    public void onImageViewClick(){
+    Log.v("testing", "clicks");
+
+        rootCallback.onTap(mProfile);
+
+    }
+
+
     @SwipeOut
     private void onSwipedOut(){
         Log.d("EVENT", "onSwipedOut");
         mSwipeView.addView(this);
+        rootCallback.onReject(mProfile);
     }
 
     @SwipeCancelState
@@ -68,6 +85,7 @@ public class TinderCard {
     @SwipeIn
     private void onSwipeIn(){
         Log.d("EVENT", "onSwipedIn");
+        rootCallback.onAccept(mProfile);
     }
 
     @SwipeInState

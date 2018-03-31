@@ -21,6 +21,7 @@ import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
+import gymbuddy.project.capstone.gymbuddy.UI.MapPage.MapActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.MessageFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.OnListInteractionListener;
 
@@ -117,13 +118,16 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
     @Override
     public void onMapFragmentInteraction() {
-        fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction = fragmentManager.beginTransaction();
+//
+//        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+//
+//        fragmentTransaction.replace(R.id.homeFragmentContainer, new SupportMapFragment()).addToBackStack(null);
+//
+//        fragmentTransaction.commit();
 
-        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-
-        fragmentTransaction.replace(R.id.homeFragmentContainer, new SupportMapFragment()).addToBackStack(null);
-
-        fragmentTransaction.commit();
+        Intent intent = new Intent(HomeActivity.this, MapActivity.class);
+        startActivity(intent);
 
     }
 
