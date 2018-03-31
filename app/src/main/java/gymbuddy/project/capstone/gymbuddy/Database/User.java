@@ -148,9 +148,9 @@ public class User {
 
         email = "";
         name = "";
-        longitude = "";
-        latitude = "";
-        altitude = "";
+        longitude = "0.0";
+        latitude = "0.0";
+        altitude = "0.0";
         fbUserID = "";
         userID = "";
         perferredDistance = 100;
