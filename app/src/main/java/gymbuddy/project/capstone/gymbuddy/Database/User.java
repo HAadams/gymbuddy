@@ -59,6 +59,7 @@ public class User {
     }
 
     public void setAge(Integer age) {
+        System.out.println("Setting age: "+age);
         this.age = age;
     }
 
@@ -145,7 +146,7 @@ public class User {
         unlikes = new HashMap<>();
         birthday = "";
         gender = "";
-
+        age = 0;
         email = "";
         name = "";
         longitude = "0.0";
@@ -475,7 +476,6 @@ public class User {
         if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
             age--;
         }
-
         return age;
 
     }

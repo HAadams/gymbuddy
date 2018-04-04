@@ -3,6 +3,8 @@ package gymbuddy.project.capstone.gymbuddy.Adapters;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import gymbuddy.project.capstone.gymbuddy.Database.User;
+
 /**
  * Created by New User on 2/15/2018.
  */
@@ -26,6 +28,18 @@ public class Profile {
     @SerializedName("location")
     @Expose
     private String location;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        this.imageUrl = user.getPhotoURL().toString();
+        System.out.println("USER NAME: "+user.getName());
+    }
+
+    private User user;
 
     public String getName() {
         return name;

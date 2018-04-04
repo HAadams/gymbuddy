@@ -51,17 +51,13 @@ public class FirebaseDatabaseHelper {
     }
 
     private static final String FIREBASE_DATABASE_URL = "https://gymbuddy-a1579.firebaseio.com";
-    private static final String GENDERS = "Gender";
-    private static final String PHOTOS = "Photos";
-    private static final String BIRTHDATES = "Birthdate";
-    private static final String LIKES = "Likes";
-    private static final String LIKED = "Liked";
-    private static final String FRIENDS = "Friends";
-    private static final String LOCATIONS = "Location";
-    private static final String NAMES = "Name";
-    private static final String EMAILS = "Email";
-    private static final String USERS = "Users";
-    private static final String UNLIKES = "Unlikes";
+    private static final String PHOTOS = "photos";
+    private static final String LIKES = "likes";
+    private static final String LIKED = "liked";
+    private static final String FRIENDS = "friends";
+    private static final String LOCATIONS = "location";
+    private static final String USERS = "users";
+    private static final String UNLIKES = "unlikes";
     private static final String FEMALE = "female";
     private static final String MALE = "male";
     private static final String OTHER = "other";
@@ -93,7 +89,6 @@ public class FirebaseDatabaseHelper {
     private FirebaseDatabaseHelper(){
         initObjects();
         setListeners();
-        getUsersGroup();
     }
 
     private void initObjects(){
@@ -106,14 +101,14 @@ public class FirebaseDatabaseHelper {
         usersRef = rootRef.child(USERS);
         currentUserRef = usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         locationsRef = currentUserRef.child(LOCATIONS);
-        gendersRef = currentUserRef.child(GENDERS);
-        birthdatesRef = currentUserRef.child(BIRTHDATES);
+        gendersRef = currentUserRef.child(GENDER);
+        birthdatesRef = currentUserRef.child(BIRTHDAY);
         likesRef = currentUserRef.child(LIKES);
         likedRef = currentUserRef.child(LIKED);
         friendsRef = currentUserRef.child(FRIENDS);
         photosRef = currentUserRef.child(PHOTOS);
-        namesRef = currentUserRef.child(NAMES);
-        emailsRef = currentUserRef.child(EMAILS);
+        namesRef = currentUserRef.child(NAME);
+        emailsRef = currentUserRef.child(EMAIL);
         unlikesRef = currentUserRef.child(UNLIKES);
     }
 
@@ -235,6 +230,7 @@ public class FirebaseDatabaseHelper {
                     User u = getNewUser(user);
                     // If null, it means the user doesn't match the current user's criteria, skip.
                     if(u == null) continue;
+                    Log.d("getUsersGroup()", "Adding user: "+u.getName());
                     users_from_database.put(u.getUserID(), u);
                 }
             }
@@ -268,10 +264,12 @@ public class FirebaseDatabaseHelper {
 
         for(DataSnapshot info: user.getChildren()){
             n.setUserID(info.getKey());
+            Log.d("getNewUser() User Info", info.getKey());
             switch(info.getKey()){
                 case PHOTOS:
                     for(DataSnapshot photo: info.getChildren())
                         n.setPhotos(Integer.parseInt(photo.getKey()), photo.getValue().toString());
+                    break;
                 case NAME:
                     n.setName(info.getValue().toString());
                     break;
@@ -300,13 +298,12 @@ public class FirebaseDatabaseHelper {
                     Double distance = LocationHelper.distance(
                             Double.valueOf(currentUser.getLatitude()),
                             Double.valueOf(currentUser.getLongitude()),
-                            Double.valueOf(currentUser.getAltitude()),
                             user_loc[1],
                             user_loc[2],
-                            user_loc[0]);
-
-                    if( !(Math.abs(distance) <= p_distance) )
+                            "M");
+                    if(Math.abs(distance) > p_distance) {
                         return null;
+                    }
 
                     n.setAltitude(user_loc[0].toString());
                     n.setLatitude(user_loc[1].toString());
@@ -325,6 +322,7 @@ public class FirebaseDatabaseHelper {
                     // If the current user's age is not within the user's age limit, skip
                     tmp_maxAge = Integer.parseInt(info.getValue().toString());
                     if(currentUser.getAge() > tmp_maxAge) return null;
+                    Log.d("CurrentUser Age", currentUser.getAge().toString());
                     n.setMaxAge(tmp_maxAge);
                     break;
 

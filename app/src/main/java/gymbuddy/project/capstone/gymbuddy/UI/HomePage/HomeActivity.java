@@ -74,6 +74,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
             CurrentUser.getInstance().saveUserLocationToDevice(this);
+            FirebaseDatabaseHelper.getInstance().getUsersGroup();
         }
 
     }

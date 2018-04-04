@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Database.User;
 
 /**
  * Created by New User on 2/15/2018.
