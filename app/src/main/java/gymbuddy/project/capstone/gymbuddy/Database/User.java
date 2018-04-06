@@ -40,7 +40,7 @@ public class User {
     private String longitude;
     private String latitude;
     private String altitude;
-
+    private String location;
 
     private String fbUserID;
     private String userID;
@@ -166,6 +166,14 @@ public class User {
 
     public String getUserID() {
         return userID;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public void setUserID(String userID) {
