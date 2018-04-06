@@ -3,16 +3,25 @@ package gymbuddy.project.capstone.gymbuddy.Map;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
 
+import java.util.List;
+import java.util.Locale;
+
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Database.User;
+import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -234,6 +243,22 @@ public class LocationHelper implements android.location.LocationListener{
                 default:
                     break;
             }
+        }
+        return location;
+    }
+
+    public static String getLocality(Context context, User user){
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        List<Address> addresses;
+        String location = "Unknown";
+        Log.d("getLocality()", "Latitude: "+user.getLatitude() + " Longitude: "+ user.getLongitude());
+        try {
+            addresses = geocoder.getFromLocation(Double.valueOf(user.getLatitude()), Double.valueOf(user.getLongitude()), 1);
+            location = addresses.get(0).getAddressLine(1);
+            location = location.substring(0, location.length() - 6);
+
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return location;
     }

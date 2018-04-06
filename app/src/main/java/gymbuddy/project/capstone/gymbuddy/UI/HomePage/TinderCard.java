@@ -23,6 +23,7 @@ import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 
@@ -58,7 +59,7 @@ public class TinderCard {
     private void onResolved(){
         Glide.with(mContext).load(mProfile.getUser().getPhotoURL()).into(profileImageView);
         nameAgeTxt.setText(mProfile.getUser().getName() + ", " + mProfile.getUser().getAge());
-        locationNameTxt.setText(mProfile.getUser().getLocation());
+        locationNameTxt.setText(LocationHelper.getLocality(mContext, mProfile.getUser()));
     }
 
     @Click(R.id.tinderCard)
@@ -88,9 +89,6 @@ public class TinderCard {
     @SwipeInState
     private void onSwipeInState(){
         Log.d("EVENT", "onSwipeInState");
-        FirebaseDatabaseHelper.getInstance().updateLikes(CurrentUser.getInstance().getUserID());
-        CurrentUser.getInstance().getLikes().add(CurrentUser.getInstance().getUserID());
-
     }
 
     @SwipeOutState

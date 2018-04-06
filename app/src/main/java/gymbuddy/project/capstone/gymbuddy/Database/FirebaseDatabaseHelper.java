@@ -241,9 +241,9 @@ public class FirebaseDatabaseHelper {
                     if(user.getKey().equalsIgnoreCase(currentUser.getUserID()))
                         continue;
                     // If user is on the current user's unlikes list, skip.
-                    //if(currentUser.getUnlikes().get(user.getKey()) != null) continue;
-                    // If user already liked this person (exists in likes list), skip.
-                    //if(currentUser.getLikes().get(user.getKey()) != null) continue;
+                    if(currentUser.getUnlikes().contains(user.getKey())) continue;
+                    // If current user already likes this person (exists in likes list), skip.
+                    if(currentUser.getLikes().contains(user.getKey())) continue;
                     // Get the new user
                     User u = getNewUser(user);
                     // If null, it means the user doesn't match the current user's criteria, skip.
@@ -538,12 +538,6 @@ public class FirebaseDatabaseHelper {
         System.out.println("Setting Gender To: "+perferred_gender);
 
         updateUserSearchSettings(18, 100, 100, perferred_gender);
-        try {
-            updateUserPhotos(0, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
-        }catch(Exception e){
-            Log.e("Setting default picture", e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     public boolean isUsersFetchComplete(){return usersFetchComplete;}
@@ -583,6 +577,12 @@ public class FirebaseDatabaseHelper {
                                 fdbh.updateUserName(object.getString(NAME));
                                 currentUser.setName(object.getString(NAME));
                                 fdbh.setDefaultUserSearchSettings();
+                                try {
+                                    updateUserPhotos(0, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+                                }catch(Exception e){
+                                    Log.e("Setting default picture", e.getMessage());
+                                    e.printStackTrace();
+                                }
                                 fdbh.setCurrentUserData();
                                 fetchComplete = true;
                             } catch (Exception e) {

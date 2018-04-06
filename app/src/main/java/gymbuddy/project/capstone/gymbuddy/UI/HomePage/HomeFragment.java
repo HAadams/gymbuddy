@@ -19,6 +19,7 @@ import com.mindorks.placeholderview.SwipePlaceHolderView;
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
+import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
 
@@ -95,19 +96,19 @@ public class HomeFragment extends Fragment {
                 mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView, new cardTapToProfileCallback() {
                     @Override
                     public void onTap(Profile profile) {
-                        Toast.makeText(getContext(),"tap for dat ass" ,
+                        Toast.makeText(getContext(),"tap for dat ass: " + profile.getUser().getName(),
                                 Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onReject(Profile profile) {
-                        Toast.makeText(getContext(),"too fat",
+                        Toast.makeText(getContext(),"too fat: " + profile.getUser().getName(),
                                 Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onAccept(Profile profile) {
-                        Toast.makeText(getContext(),"short and white" ,
+                        Toast.makeText(getContext(),"short and white: " + profile.getUser().getName() ,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }));

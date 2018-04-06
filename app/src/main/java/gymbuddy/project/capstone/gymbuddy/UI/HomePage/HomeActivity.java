@@ -3,6 +3,8 @@ package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +13,9 @@ import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
+import java.util.Locale;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
@@ -51,6 +56,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.replace(R.id.homeFragmentContainer, new HomeFragment());
 
         fragmentTransaction.commit();
+
     }
 
     @Override
