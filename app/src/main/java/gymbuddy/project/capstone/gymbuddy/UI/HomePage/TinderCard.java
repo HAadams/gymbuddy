@@ -56,19 +56,16 @@ public class TinderCard {
 
     @Resolve
     private void onResolved(){
-        Glide.with(mContext).load(mProfile.getImageUrl()).into(profileImageView);
-        nameAgeTxt.setText(mProfile.getName() + ", " + mProfile.getAge());
+        Glide.with(mContext).load(mProfile.getUser().getPhotoURL()).into(profileImageView);
+        nameAgeTxt.setText(mProfile.getUser().getName() + ", " + mProfile.getUser().getAge());
         locationNameTxt.setText(mProfile.getLocation());
     }
 
     @Click(R.id.tinderCard)
     public void onImageViewClick(){
     Log.v("testing", "clicks");
-
         rootCallback.onTap(mProfile);
-
     }
-
 
     @SwipeOut
     private void onSwipedOut(){

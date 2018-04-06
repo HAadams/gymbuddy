@@ -255,9 +255,14 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            FirebaseDatabaseHelper.getInstance().getUsersGroup();
+            // Wait until current user data is updated
             FirebaseDatabaseHelper.getInstance().setCurrentUserData();
+            while(!FirebaseDatabaseHelper.getInstance().isCurrentUserUpdateComplete());
+
+            // Wait until users are pulled from database
+            FirebaseDatabaseHelper.getInstance().getUsersGroup();
             while(!(fdbh.isUsersFetchComplete() && fdbh.isCurrentUserUpdateComplete()));
+
             return null;
         }
 

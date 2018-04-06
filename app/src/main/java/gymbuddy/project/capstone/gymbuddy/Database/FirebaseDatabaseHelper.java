@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
@@ -84,8 +85,7 @@ public class FirebaseDatabaseHelper {
     private boolean currentUserUpdateComplete;
 
     private static FirebaseUser user;
-    public Map<String, User> users_from_database;
-    public Map<String, User> users_from_device;
+    public ArrayList<Profile> users_from_database;
 
     private FirebaseDatabaseHelper(){
         initObjects();
@@ -96,8 +96,7 @@ public class FirebaseDatabaseHelper {
         fetchComplete = false;
         errorOccured = false;
         usersFetchComplete = false;
-        users_from_database = new HashMap<String, User>();
-        users_from_device = new HashMap<String, User>();
+        users_from_database = new ArrayList<>();
         rootRef = new Firebase(FIREBASE_DATABASE_URL);
         usersRef = rootRef.child(USERS);
         currentUserRef = usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -250,7 +249,9 @@ public class FirebaseDatabaseHelper {
                     // If null, it means the user doesn't match the current user's criteria, skip.
                     if(u == null) continue;
                     Log.d("getUsersGroup()", "Adding user: "+u.getName());
-                    users_from_database.put(u.getUserID(), u);
+                    Profile p = new Profile();
+                    p.setUser(u);
+                    users_from_database.add(p);
                 }
                 usersFetchComplete = true;
             }
@@ -448,9 +449,7 @@ public class FirebaseDatabaseHelper {
                 default:
                     break;
             }
-
         }
-
         return tmp_user;
     }
 
@@ -528,12 +527,16 @@ public class FirebaseDatabaseHelper {
     public void setDefaultUserSearchSettings(){
         CurrentUser currentUser = CurrentUser.getInstance();
         String perferred_gender;
+        System.out.println("Current Gender: "+currentUser.getGender());
         if(currentUser.getGender().equalsIgnoreCase(FEMALE))
             perferred_gender = MALE;
         else if(currentUser.getGender().equalsIgnoreCase(MALE))
             perferred_gender = FEMALE;
         else
             perferred_gender = OTHER;
+
+        System.out.println("Setting Gender To: "+perferred_gender);
+
         updateUserSearchSettings(18, 100, 100, perferred_gender);
         try {
             updateUserPhotos(0, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
@@ -569,11 +572,16 @@ public class FirebaseDatabaseHelper {
                                 JSONObject object,
                                 GraphResponse response) {
                             try {
+                                CurrentUser currentUser = CurrentUser.getInstance();
                                 FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
                                 fdbh.updateUserBirthday(object.getString(BIRTHDAY));
+                                currentUser.setBirthday(object.getString(BIRTHDAY));
                                 fdbh.updateUserEmail(object.getString(EMAIL));
+                                currentUser.setEmail(object.getString(EMAIL));
                                 fdbh.updateUserGender(object.getString(GENDER));
+                                currentUser.setGender(object.getString(GENDER));
                                 fdbh.updateUserName(object.getString(NAME));
+                                currentUser.setName(object.getString(NAME));
                                 fdbh.setDefaultUserSearchSettings();
                                 fdbh.setCurrentUserData();
                                 fetchComplete = true;

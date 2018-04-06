@@ -1,12 +1,8 @@
 package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +20,7 @@ import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.Utilities.Utils;
 
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment {
@@ -97,7 +91,7 @@ public class HomeFragment extends Fragment {
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
         if (mSwipeView!=null) {
-            for (Profile profile : Utils.loadProfiles(mContext)) {
+            for (Profile profile : FirebaseDatabaseHelper.getInstance().users_from_database) {
                 mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView, new cardTapToProfileCallback() {
                     @Override
                     public void onTap(Profile profile) {
