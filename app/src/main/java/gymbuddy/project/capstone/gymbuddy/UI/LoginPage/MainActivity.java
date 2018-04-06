@@ -1,7 +1,10 @@
 package gymbuddy.project.capstone.gymbuddy.UI.LoginPage;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -34,7 +37,7 @@ import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NetworkCallbackListener{
 
 
     private CallbackManager mCallbackManager;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     LoginButton loginButton;
 
     private int currentPage;
+    private NetworkCallbackListener networkCallbackListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         });
+        networkCallbackListener = (NetworkCallbackListener) this;
 
     }
 
@@ -193,25 +198,27 @@ public class MainActivity extends AppCompatActivity {
         // After user re-opens the app, check if they were logged in
         // If they were logged in, take them straight to the HomeActivity
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            startHomePageActivity();
+            startUsersDataFetcher();
         }
     }
 
     public void updateUserData(){
         try {
-            FirebaseDatabaseHelper.getInstance().UploadUserDataToDatabase();
+            FirebaseDatabaseHelper.getInstance().uploadUserDataToDatabase();
         }catch(Exception e){
             Log.e(getClass().toString(), e.toString());
         }
     }
 
-    public void startHomePageActivity(){
+    private void startUsersDataFetcher(){
+        new AsyncUsersDataFetcher(networkCallbackListener).execute();
+    }
+    private void startHomePageActivity(){
         Log.w(getClass().toString(), "startHomepageActivity:starting Homepage activity");
         Intent homepageActivity = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(homepageActivity);
         finish();
     }
-
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -224,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             updateUserData();
-                            startHomePageActivity();
+                            startUsersDataFetcher();
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -235,4 +242,35 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public void onUsersDataDownloaded() {
+        startHomePageActivity();
+    }
+
+    private static class AsyncUsersDataFetcher extends AsyncTask<Void, Void, Void>{
+        NetworkCallbackListener nListener;
+        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+        AsyncUsersDataFetcher(NetworkCallbackListener nListener){
+            this.nListener = nListener;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            FirebaseDatabaseHelper.getInstance().getUsersGroup();
+            FirebaseDatabaseHelper.getInstance().setCurrentUserData();
+            while(!(fdbh.isUsersFetchComplete() && fdbh.isCurrentUserUpdateComplete()));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            fdbh.setFlags(true, false, false);
+            nListener.onUsersDataDownloaded();
+
+        }
+    }
+
+}
+interface NetworkCallbackListener{
+    void onUsersDataDownloaded();
 }

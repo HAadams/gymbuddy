@@ -75,13 +75,14 @@ public class FirebaseDatabaseHelper {
     public final String MAX_AGE = "max_age";
     public final String PERFERRED_DISTANCE = "perferred_distance";
     public final String PERFERRED_GENDER = "perferred_gender";
-
     private static Firebase rootRef, namesRef, locationsRef, gendersRef, birthdatesRef,
             likesRef, likedRef, friendsRef, photosRef, emailsRef, usersRef, unlikesRef, currentUserRef;
 
     private boolean fetchComplete;
     private boolean errorOccured;
-    public CurrentUser currentUser;
+    private boolean usersFetchComplete;
+    private boolean currentUserUpdateComplete;
+
     private static FirebaseUser user;
     public Map<String, User> users_from_database;
     public Map<String, User> users_from_device;
@@ -94,9 +95,9 @@ public class FirebaseDatabaseHelper {
     private void initObjects(){
         fetchComplete = false;
         errorOccured = false;
+        usersFetchComplete = false;
         users_from_database = new HashMap<String, User>();
         users_from_device = new HashMap<String, User>();
-        currentUser = CurrentUser.getInstance();
         rootRef = new Firebase(FIREBASE_DATABASE_URL);
         usersRef = rootRef.child(USERS);
         currentUserRef = usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -139,7 +140,6 @@ public class FirebaseDatabaseHelper {
 
             }
         });
-
         likedRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -164,6 +164,23 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
+            }
+        });
+    }
+
+    public void setCurrentUserData(){
+        currentUserUpdateComplete = false;
+        usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                CurrentUser.setCurrentUser(getUserFromSnapshot(dataSnapshot, "current_user"));
+                CurrentUser.getInstance().setUserID(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                currentUserUpdateComplete = true;
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                currentUserUpdateComplete = false;
             }
         });
     }
@@ -214,6 +231,7 @@ public class FirebaseDatabaseHelper {
          */
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            CurrentUser currentUser = CurrentUser.getInstance();
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -221,11 +239,12 @@ public class FirebaseDatabaseHelper {
                 for(DataSnapshot user: dataSnapshot.getChildren()){
                     // user.getKey() returns the USER_ID
                     // If user is current user, skip.
-                    if(user.getKey().equalsIgnoreCase(currentUser.getUserID())) continue;
+                    if(user.getKey().equalsIgnoreCase(currentUser.getUserID()))
+                        continue;
                     // If user is on the current user's unlikes list, skip.
-                    if(currentUser.getUnlikes().get(user.getKey()) != null) continue;
+                    //if(currentUser.getUnlikes().get(user.getKey()) != null) continue;
                     // If user already liked this person (exists in likes list), skip.
-                    if(currentUser.getLikes().get(user.getKey()) != null) continue;
+                    //if(currentUser.getLikes().get(user.getKey()) != null) continue;
                     // Get the new user
                     User u = getNewUser(user);
                     // If null, it means the user doesn't match the current user's criteria, skip.
@@ -233,11 +252,12 @@ public class FirebaseDatabaseHelper {
                     Log.d("getUsersGroup()", "Adding user: "+u.getName());
                     users_from_database.put(u.getUserID(), u);
                 }
+                usersFetchComplete = true;
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                usersFetchComplete = false;
             }
         });
     }
@@ -245,9 +265,10 @@ public class FirebaseDatabaseHelper {
     private User getNewUser(DataSnapshot user){
 
         /*
-        This method convertes teh DataSnapshot object to a user object.
+        This method converts the DataSnapshot object to a user object.
         It also does the filtering based on min_age, max_age, preferred distance and preferred gender.
         */
+        CurrentUser currentUser = CurrentUser.getInstance();
         Integer p_distance, min_age, max_age;
         String p_gender;
         p_distance = currentUser.getPerferredDistance();
@@ -276,6 +297,7 @@ public class FirebaseDatabaseHelper {
                 case GENDER:
                     // filter by gender preference.
                     tmp_gender = info.getValue().toString();
+                    Log.d("getNewUser():GENDER", "p_gender: "+p_gender+" tmp_gender: "+tmp_gender);
                     if (!tmp_gender.equalsIgnoreCase(p_gender))
                         return null;
 
@@ -301,6 +323,9 @@ public class FirebaseDatabaseHelper {
                             user_loc[1],
                             user_loc[2],
                             "M");
+                    Log.d("CurrentUser:LOCATIONS", "LAT: "+currentUser.getLatitude()+" LONG: "+currentUser.getLongitude());
+                    Log.d("OtherUser:LOCATIONS", "LAT: "+user_loc[1]+" LONG: "+user_loc[2]);
+                    Log.d("getNewUser():LOCATIONS", "Distance: "+distance+" P_distance: "+p_distance);
                     if(Math.abs(distance) > p_distance) {
                         return null;
                     }
@@ -350,22 +375,99 @@ public class FirebaseDatabaseHelper {
 
         return n;
     }
+
+    private User getUserFromSnapshot(DataSnapshot user, String u){
+
+        /*
+        This method converts the DataSnapshot object to a user object.
+        */
+        User tmp_user;
+        if(u.equals("current_user"))
+            tmp_user = new CurrentUser();
+        else
+            tmp_user = new User();
+
+        for(DataSnapshot info: user.getChildren()){
+            switch(info.getKey()){
+                case PHOTOS:
+                    for(DataSnapshot photo: info.getChildren())
+                        tmp_user.setPhotos(Integer.parseInt(photo.getKey()), photo.getValue().toString());
+                    break;
+                case NAME:
+                    tmp_user.setName(info.getValue().toString());
+                    break;
+                case EMAIL:
+                    tmp_user.setEmail(info.getValue().toString());
+                    break;
+                case GENDER:
+                    tmp_user.setGender(info.getValue().toString());
+                    break;
+                case BIRTHDAY:
+                    tmp_user.setBirthday(info.getValue().toString());
+                    tmp_user.setAge(User.getUserAge(tmp_user.getBirthday()));
+                    break;
+                case LOCATIONS:
+                    // filter by distance
+                    Double[] user_loc = LocationHelper.getLocationFromSnapshot(info);
+                    tmp_user.setAltitude(user_loc[0].toString());
+                    tmp_user.setLatitude(user_loc[1].toString());
+                    tmp_user.setLongitude(user_loc[2].toString());
+                    break;
+                case MIN_AGE:
+                    tmp_user.setMinAge(Integer.parseInt(info.getValue().toString()));
+                    break;
+
+                case MAX_AGE:
+                    tmp_user.setMaxAge(Integer.parseInt(info.getValue().toString()));
+                    break;
+
+                case PERFERRED_DISTANCE:
+                    tmp_user.setPerferredDistance(Integer.parseInt(info.getValue().toString()));
+                    break;
+
+                case PERFERRED_GENDER:
+                    tmp_user.setPerferredGender(info.getValue().toString());
+                    break;
+
+                case UNLIKES:
+                    for(DataSnapshot u_id: info.getChildren())
+                        tmp_user.addToUnlikes(u_id.getValue().toString());
+                    break;
+                case LIKES:
+                    for(DataSnapshot u_id: info.getChildren())
+                        tmp_user.addToLikes(u_id.getValue().toString());
+                    break;
+                case LIKED:
+                    for(DataSnapshot u_id: info.getChildren())
+                        tmp_user.addToLiked(u_id.getValue().toString());
+                    break;
+                case FRIENDS:
+                    for(DataSnapshot u_id: info.getChildren())
+                        tmp_user.addToFriends(u_id.getValue().toString(), null);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        return tmp_user;
+    }
+
     public void updateLikes(String id){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         likesRef.child(id).setValue(id);
     }
 
-    public void UploadUserDataToDatabase(){
+    public void uploadUserDataToDatabase(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
-        currentUser.setPhotoURL(user.getPhotoUrl());
-        currentUser.setUserID(user.getUid());
-        FetchCurrentUserData();
-        new UserDataUpdater().execute();
+        FetchUserDataFromFB();
     }
 
     public void updateLatitudeLocation(Double latitude){
+        CurrentUser currentUser = CurrentUser.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setLatitude(latitude.toString());;
@@ -373,6 +475,7 @@ public class FirebaseDatabaseHelper {
     }
 
     public void updateLongitudeLocation(Double longitude){
+        CurrentUser currentUser = CurrentUser.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setLongitude(longitude.toString());
@@ -380,6 +483,7 @@ public class FirebaseDatabaseHelper {
     }
 
     public void updateAltitudeLocation(Double altitude){
+        CurrentUser currentUser = CurrentUser.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         currentUser.setAltitude(altitude.toString());
@@ -404,7 +508,7 @@ public class FirebaseDatabaseHelper {
         gendersRef.setValue(gender);
     }
 
-    public void updateUserBirthdate(String birthdate){
+    public void updateUserBirthday(String birthdate){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         birthdatesRef.setValue(birthdate);
@@ -422,6 +526,7 @@ public class FirebaseDatabaseHelper {
     }
 
     public void setDefaultUserSearchSettings(){
+        CurrentUser currentUser = CurrentUser.getInstance();
         String perferred_gender;
         if(currentUser.getGender().equalsIgnoreCase(FEMALE))
             perferred_gender = MALE;
@@ -429,17 +534,32 @@ public class FirebaseDatabaseHelper {
             perferred_gender = FEMALE;
         else
             perferred_gender = OTHER;
-
         updateUserSearchSettings(18, 100, 100, perferred_gender);
+        try {
+            updateUserPhotos(0, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+        }catch(Exception e){
+            Log.e("Setting default picture", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    private boolean isErrorOccured(){return errorOccured;}
+    public boolean isUsersFetchComplete(){return usersFetchComplete;}
 
-    private boolean isFetchComplete(){return fetchComplete;}
+    public boolean isCurrentUserUpdateComplete(){return currentUserUpdateComplete;}
 
-    private void FetchCurrentUserData(){
+    public void setFlags(boolean fetchComplete, boolean usersFetchComplete, boolean currentUserUpdateComplete){
+        this.fetchComplete = fetchComplete;
+        this.usersFetchComplete = usersFetchComplete;
+        this.currentUserUpdateComplete = currentUserUpdateComplete;
+    }
+
+    private void FetchUserDataFromFB(){
+        /*
+        Fetches user's data from facebook and uploads it to Firebase
+         */
         fetchComplete = false;
         errorOccured = false;
+
         try {
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
@@ -449,12 +569,13 @@ public class FirebaseDatabaseHelper {
                                 JSONObject object,
                                 GraphResponse response) {
                             try {
-                                currentUser.setBirthday(object.getString(BIRTHDAY));
-                                currentUser.setGender(object.getString(GENDER));
-                                currentUser.setFbUserID(object.getString(ID));
-                                currentUser.setName(object.getString(NAME));
-                                currentUser.setEmail(object.getString(EMAIL));
-                                currentUser.setAge(User.getUserAge(currentUser.getBirthday()));
+                                FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+                                fdbh.updateUserBirthday(object.getString(BIRTHDAY));
+                                fdbh.updateUserEmail(object.getString(EMAIL));
+                                fdbh.updateUserGender(object.getString(GENDER));
+                                fdbh.updateUserName(object.getString(NAME));
+                                fdbh.setDefaultUserSearchSettings();
+                                fdbh.setCurrentUserData();
                                 fetchComplete = true;
                             } catch (Exception e) {
                                 Log.e(getClass().toString(), "Error fetching user information");
@@ -471,31 +592,9 @@ public class FirebaseDatabaseHelper {
             request.setParameters(parameters);
             request.executeAsync();
         }catch(Exception e){
-            Log.e("FetchCurrentUserData", e.getStackTrace().toString());
+            e.printStackTrace();
+            Log.e("FetchCurrentUserData", e.getMessage());
         }
     }
 
-    private static class UserDataUpdater extends AsyncTask<Void, Void, Void> {
-        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            while(!fdbh.isFetchComplete() && !fdbh.isErrorOccured()){}
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if(fdbh.isErrorOccured()) {
-                Log.e("UserDataUpdater", "Error occurred in graph request that updates user data.");
-                return;
-            }
-            fdbh.updateUserBirthdate(fdbh.currentUser.getBirthday());
-            fdbh.updateUserEmail(fdbh.currentUser.getEmail());
-            fdbh.updateUserGender(fdbh.currentUser.getGender());
-            fdbh.updateUserName(fdbh.currentUser.getName());
-            fdbh.setDefaultUserSearchSettings();
-        }
-    }
 }

@@ -2,7 +2,7 @@ package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
@@ -18,7 +17,6 @@ import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.AlbumsFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MapPage.MapActivity;
@@ -40,6 +38,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         Fresco.initialize(this);
 
+        FirebaseDatabaseHelper.getInstance().getUsersGroup();
+
         fdbh = FirebaseDatabaseHelper.getInstance();
 
         context = this;
@@ -51,20 +51,12 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.replace(R.id.homeFragmentContainer, new HomeFragment());
 
         fragmentTransaction.commit();
-
-        }
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Load user data
-        CurrentUser.getInstance().getUserDataFromDevice(this);
-        CurrentUser.getInstance().getUserPhotosFromDevice(this);
-        CurrentUser.getInstance().getUserLocationFromDevice(this);
-        CurrentUser.getInstance().getUserLikedFromDevice(this);
-        CurrentUser.getInstance().getUserLikesFromDevice(this);
-        CurrentUser.getInstance().getUserUnlikesFromDevice(this);
-        CurrentUser.getInstance().getUserFriendsFromDevice(this);
+        System.out.println("I AM IN onSTART");
     }
 
     @Override
@@ -73,8 +65,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
-            CurrentUser.getInstance().saveUserLocationToDevice(this);
-            FirebaseDatabaseHelper.getInstance().getUsersGroup();
         }
 
     }
@@ -135,13 +125,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     @Override
     protected void onStop() {
         super.onStop();
-        CurrentUser.getInstance().saveUserDataToDevice(this);
-        CurrentUser.getInstance().saveUserLocationToDevice(this);
-        CurrentUser.getInstance().saveUserPhotosToDevice(this);
-        CurrentUser.getInstance().saveUserLikedToDevice(this);
-        CurrentUser.getInstance().saveUserLikesToDevice(this);
-        CurrentUser.getInstance().saveUserUnlikesToDevice(this);
-        CurrentUser.getInstance().saveUserFriendsToDevice(this);
+        System.out.println("I AM IN onSTOP");
     }
 
     @Override

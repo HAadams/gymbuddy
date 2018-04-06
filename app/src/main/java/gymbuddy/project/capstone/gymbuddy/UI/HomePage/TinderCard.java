@@ -92,7 +92,7 @@ public class TinderCard {
     private void onSwipeInState(){
         Log.d("EVENT", "onSwipeInState");
         FirebaseDatabaseHelper.getInstance().updateLikes(CurrentUser.getInstance().getUserID());
-        CurrentUser.getInstance().getLikes().put(CurrentUser.getInstance().getUserID(), new User());
+        CurrentUser.getInstance().getLikes().add(CurrentUser.getInstance().getUserID());
 
     }
 

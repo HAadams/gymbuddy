@@ -4,7 +4,6 @@ package gymbuddy.project.capstone.gymbuddy.Database;
 public class CurrentUser extends User {
 
     private static CurrentUser initialInstance = null;
-
     public static synchronized CurrentUser getInstance(){
         if(initialInstance == null)
         {
@@ -12,4 +11,8 @@ public class CurrentUser extends User {
         }
         return initialInstance;
     }
+    public static void setCurrentUser(User user){
+        initialInstance = (CurrentUser)user;
+    }
+
 }
