@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
     private TextView[] dots;
     private ViewPager mViewPager;
     LocationHelper lh;
+    Context mContext;
 
     private Button prevButton;
     private Button nextButton;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
-
+        mContext = this;
         loginButton = findViewById(R.id.login_button);
 
         mViewPager = findViewById(R.id.slideContainer);
@@ -230,7 +231,13 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            updateUserData();
+
+                            if(FirebaseDatabaseHelper.getInstance().isFirstLogin(mContext)) {
+                                // Get the current user's information and upload to database
+                                updateUserData();
+                                FirebaseDatabaseHelper.getInstance().saveFirstLoginState(mContext, false);
+                            }
+
                             startUsersDataFetcher();
 
                         } else {
@@ -255,11 +262,11 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            // Wait until current user data is updated
+            // Wait until current user data is downloaded to device
             FirebaseDatabaseHelper.getInstance().setCurrentUserData();
             while(!FirebaseDatabaseHelper.getInstance().isCurrentUserUpdateComplete());
 
-            // Wait until users are pulled from database
+            // Wait until users are pulled from database to show on homepage
             FirebaseDatabaseHelper.getInstance().getUsersGroup();
             while(!(fdbh.isUsersFetchComplete() && fdbh.isCurrentUserUpdateComplete()));
 

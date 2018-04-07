@@ -62,6 +62,7 @@ public class FirebaseDatabaseHelper {
     private static final String FEMALE = "female";
     private static final String MALE = "male";
     private static final String OTHER = "other";
+    private static final String LOGIN_STATE = "login_state_gymbuddy";
 
     public final String GENDER = "gender";
     public final String BIRTHDAY = "birthday";
@@ -83,6 +84,7 @@ public class FirebaseDatabaseHelper {
     private boolean errorOccured;
     private boolean usersFetchComplete;
     private boolean currentUserUpdateComplete;
+    private boolean firstLogin;
 
     private static FirebaseUser user;
     public ArrayList<Profile> users_from_database;
@@ -93,6 +95,7 @@ public class FirebaseDatabaseHelper {
     }
 
     private void initObjects(){
+        firstLogin = true;
         fetchComplete = false;
         errorOccured = false;
         usersFetchComplete = false;
@@ -462,9 +465,20 @@ public class FirebaseDatabaseHelper {
     public void uploadUserDataToDatabase(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
+        firstLogin = false;
         FetchUserDataFromFB();
     }
 
+    public void saveFirstLoginState(Context context, boolean state){
+        SharedPreferences.Editor editor = context.getSharedPreferences("GYMBUDDY_DATA", MODE_PRIVATE).edit();
+        editor.putBoolean(LOGIN_STATE, state);
+        editor.apply();
+    }
+
+    public boolean isFirstLogin(Context context){
+        SharedPreferences prefs = context.getSharedPreferences("GYMBUDDY_DATA", MODE_PRIVATE);
+        return prefs.getBoolean(LOGIN_STATE, true);
+    }
     public void updateLatitudeLocation(Double latitude){
         CurrentUser currentUser = CurrentUser.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
