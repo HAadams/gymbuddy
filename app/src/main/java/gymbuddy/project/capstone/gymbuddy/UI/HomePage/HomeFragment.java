@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +38,8 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private Boolean mParam1;
     private String mParam2;
+    LottieAnimationView unlike;
+    LottieAnimationView like;
 
 
     private OnFragmentInteractionListener mListener;
@@ -72,6 +75,8 @@ public class HomeFragment extends Fragment {
         mContext = getContext();
 
         SimpleDraweeView v = rootView.findViewById(R.id.homeProfileButton);
+        unlike = rootView.findViewById(R.id.rejectBtn);
+        like = rootView.findViewById(R.id.acceptBtn);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override

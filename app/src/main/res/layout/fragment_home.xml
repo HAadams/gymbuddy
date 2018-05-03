@@ -76,28 +76,38 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/com_facebook_button_icon_blue" />
 
-    <ImageButton
+
+
+
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/rejectBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="127dp"
-        android:background="@drawable/com_facebook_button_icon"
         app:layout_constraintBottom_toBottomOf="@+id/acceptBtn"
         app:layout_constraintEnd_toStartOf="@+id/acceptBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/acceptBtn" />
+        app:layout_constraintTop_toTopOf="@+id/acceptBtn"
 
-    <ImageButton
+        app:lottie_fileName="unlike.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
+
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/acceptBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="127dp"
-        android:background="@drawable/com_facebook_button_icon_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rejectBtn" />
+        app:layout_constraintStart_toEndOf="@+id/rejectBtn"
+
+        app:lottie_fileName="like.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
