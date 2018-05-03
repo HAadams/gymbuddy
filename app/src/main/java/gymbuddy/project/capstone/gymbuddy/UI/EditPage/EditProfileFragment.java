@@ -10,16 +10,22 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.appyvet.materialrangebar.RangeBar;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
+import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
 /**
@@ -50,6 +56,13 @@ public class EditProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+        setProfileImages(view);
+        setProfilePreferences(view);
+        return view;
+    }
+
+    private void setProfileImages(View view){
         List<Photo> photos_list = CurrentUser.getInstance().getPhotos();
 
         profile_image1 =  view.findViewById(R.id.profile_imageView);
@@ -148,8 +161,38 @@ public class EditProfileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-
-        return view;
     }
+    private void setProfilePreferences(final View view){
+        SeekBar distanceSeekBar = view.findViewById(R.id.distanceSeekbar);
+        distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                fdbh.updatePreferredDistance(i);
+                TextView distance = view.findViewById(R.id.distanceTextView);
+                distance.setText(String.valueOf(i)+" miles");
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        Switch genderSwitch = view.findViewById(R.id.genderSwitch);
+        genderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) fdbh.updatePreferredGender("female");
+                if(!b) fdbh.updatePreferredGender("male");
+            }
+        });
+
+    }
 }

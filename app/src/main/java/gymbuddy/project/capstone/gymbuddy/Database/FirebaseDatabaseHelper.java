@@ -532,12 +532,23 @@ public class FirebaseDatabaseHelper {
     }
 
     public void updateUserSearchSettings(Integer minAge, Integer maxAge, Integer p_distance, String p_gender){
-        currentUserRef.child(PERFERRED_GENDER).setValue(p_gender);
+        updatePreferredAgeInterval(minAge, maxAge);
+        updatePreferredGender(p_gender);
+        updatePreferredDistance(p_distance);
+    }
+
+    public void updatePreferredDistance(Integer p_distance){
         currentUserRef.child(PERFERRED_DISTANCE).setValue(p_distance);
+    }
+
+    public void updatePreferredGender(String p_gender){
+        currentUserRef.child(PERFERRED_GENDER).setValue(p_gender);
+    }
+
+    public void updatePreferredAgeInterval(Integer minAge, Integer maxAge){
         currentUserRef.child(MIN_AGE).setValue(minAge);
         currentUserRef.child(MAX_AGE).setValue(maxAge);
     }
-
     public void setDefaultUserSearchSettings(){
         CurrentUser currentUser = CurrentUser.getInstance();
         String perferred_gender;
