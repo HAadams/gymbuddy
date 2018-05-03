@@ -91,7 +91,6 @@
         app:layout_constraintTop_toTopOf="@+id/acceptBtn"
 
         app:lottie_fileName="unlike.json"
-        app:lottie_loop="true"
         app:lottie_autoPlay="true" />
 
     <com.airbnb.lottie.LottieAnimationView
@@ -105,7 +104,6 @@
         app:layout_constraintStart_toEndOf="@+id/rejectBtn"
 
         app:lottie_fileName="like.json"
-        app:lottie_loop="true"
         app:lottie_autoPlay="true"
         />
 

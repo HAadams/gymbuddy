@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment {
 
         if (mSwipeView!=null) {
             for (Profile profile : FirebaseDatabaseHelper.getInstance().users_from_database) {
+
                 mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView, new cardTapToProfileCallback() {
                     @Override
                     public void onTap(Profile profile) {

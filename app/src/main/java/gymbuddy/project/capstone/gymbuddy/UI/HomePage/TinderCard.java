@@ -57,6 +57,7 @@ public class TinderCard {
 
     @Resolve
     private void onResolved(){
+        if(mProfile == null) return;
         Glide.with(mContext).load(mProfile.getUser().getPhotoURL()).into(profileImageView);
         nameAgeTxt.setText(mProfile.getUser().getName() + ", " + mProfile.getUser().getAge());
         locationNameTxt.setText(LocationHelper.getLocality(mContext, mProfile.getUser()));

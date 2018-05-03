@@ -164,6 +164,7 @@ public class EditProfileFragment extends Fragment {
     }
     private void setProfilePreferences(final View view){
         SeekBar distanceSeekBar = view.findViewById(R.id.distanceSeekbar);
+        distanceSeekBar.setProgress(CurrentUser.getInstance().getPerferredDistance());
         distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
             @Override
@@ -189,10 +190,32 @@ public class EditProfileFragment extends Fragment {
             FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) fdbh.updatePreferredGender("female");
-                if(!b) fdbh.updatePreferredGender("male");
+                if(b) {
+                    fdbh.updatePreferredGender("female");
+                    CurrentUser.getInstance().setPerferredGender("female");
+                }
+                if(!b) {
+                    fdbh.updatePreferredGender("male");
+                    CurrentUser.getInstance().setPerferredGender("male");
+
+                }
             }
         });
+
+        RangeBar ageRangeBar = view.findViewById(R.id.rangeBar);
+        ageRangeBar.setLeft(CurrentUser.getInstance().getMinAge());
+        ageRangeBar.setRight(CurrentUser.getInstance().getMaxAge());
+        ageRangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+                if(leftPinIndex <= rightPinIndex) {
+                    CurrentUser.getInstance().setMinAge(leftPinIndex);
+                    CurrentUser.getInstance().setMaxAge(rightPinIndex);
+                    FirebaseDatabaseHelper.getInstance().updatePreferredAgeInterval(leftPinIndex, rightPinIndex);
+                }
+            }
+        });
+
 
     }
 }
