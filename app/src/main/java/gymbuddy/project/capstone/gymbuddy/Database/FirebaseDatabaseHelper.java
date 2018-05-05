@@ -2,36 +2,26 @@ package gymbuddy.project.capstone.gymbuddy.Database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.wearable.DataApi;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Album;
-import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -233,12 +223,13 @@ public class FirebaseDatabaseHelper {
          */
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            CurrentUser currentUser = CurrentUser.getInstance();
+            CurrentUser currentUser;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // This iterates over the list of users
                 for(DataSnapshot user: dataSnapshot.getChildren()){
+                    currentUser = CurrentUser.getInstance();
                     // user.getKey() returns the USER_ID
                     // If user is current user, skip.
                     if(user.getKey().equalsIgnoreCase(currentUser.getUserID()))
@@ -286,9 +277,9 @@ public class FirebaseDatabaseHelper {
         Integer tmp_minAge, tmp_maxAge;
 
         User n = new User(user.getKey());
+        n.setUserID(user.getKey());
 
         for(DataSnapshot info: user.getChildren()){
-            n.setUserID(info.getKey());
             Log.d("getNewUser() User Info", info.getKey());
             switch(info.getKey()){
                 case PHOTOS:
@@ -462,6 +453,18 @@ public class FirebaseDatabaseHelper {
         likesRef.child(id).setValue(id);
     }
 
+    public void updateUnlikes(String id){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        unlikesRef.child(id).setValue(id);
+    }
+
+    public void updateFriends(String id){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        friendsRef.child(id).setValue(id);
+    }
+
     public void uploadUserDataToDatabase(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
@@ -479,6 +482,7 @@ public class FirebaseDatabaseHelper {
         SharedPreferences prefs = context.getSharedPreferences("GYMBUDDY_DATA", MODE_PRIVATE);
         return prefs.getBoolean(LOGIN_STATE, true);
     }
+
     public void updateLatitudeLocation(Double latitude){
         CurrentUser currentUser = CurrentUser.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();

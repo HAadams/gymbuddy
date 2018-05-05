@@ -20,12 +20,8 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
-import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
-import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
-import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
-import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 
 /**
  * Created by New User on 2/15/2018.
@@ -72,7 +68,6 @@ public class TinderCard {
     @SwipeOut
     private void onSwipedOut(){
         Log.d("EVENT", "onSwipedOut");
-        mSwipeView.addView(this);
         rootCallback.onReject(mProfile);
     }
 

@@ -1,7 +1,6 @@
 package gymbuddy.project.capstone.gymbuddy.UI.LoginPage;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
+
         mContext = this;
         loginButton = findViewById(R.id.login_button);
 
@@ -235,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
                             if(FirebaseDatabaseHelper.getInstance().isFirstLogin(mContext)) {
                                 // Get the current user's information and upload to database
                                 updateUserData();
-                                FirebaseDatabaseHelper.getInstance().saveFirstLoginState(mContext, false);
+                                if(FirebaseDatabaseHelper.getInstance().isFirstLogin(mContext))
+                                    FirebaseDatabaseHelper.getInstance().saveFirstLoginState(mContext, false);
                             }
 
                             startUsersDataFetcher();

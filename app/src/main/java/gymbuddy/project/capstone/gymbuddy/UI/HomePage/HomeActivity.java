@@ -43,8 +43,6 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
 
         Fresco.initialize(this);
 
-        FirebaseDatabaseHelper.getInstance().getUsersGroup();
-
         fdbh = FirebaseDatabaseHelper.getInstance();
 
         context = this;
@@ -62,31 +60,18 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("I AM IN onSTART");
     }
 
     @Override
     public void onResume(){
         super.onResume();
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            Log.d("HomeActivity:onResume", "Im in onResume()");
             // Update user location after they re-open the app if they are already logged in
             LocationHelper.getInstance(this).updateUserLocation();
         }
-
     }
 
-    private void startMainActivity(){
-        if(FirebaseAuth.getInstance().getCurrentUser() == null){
-            Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
-            startActivity(new Intent(HomeActivity.this, MainActivity.class));
-            finish();
-        }
-    }
-
-    @Override
-    public void onLogoutFragmentInteraction() {
-        startMainActivity();
-    }
 
     @Override
     public void onPhotosFragmentInteraction() {

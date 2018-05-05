@@ -1,15 +1,18 @@
 package gymbuddy.project.capstone.gymbuddy.UI.EditPage;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -20,6 +23,8 @@ import android.widget.TextView;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,8 @@ import java.util.List;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.HomePage.HomeActivity;
+import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,11 +64,27 @@ public class EditProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
+
+        Button logout = view.findViewById(R.id.logoutButton);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                startMainActivity();
+            }
+        });
         setProfileImages(view);
         setProfilePreferences(view);
         return view;
     }
-
+    private void startMainActivity(){
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            Log.w(getClass().toString(), "startMainActivity:starting main activity after logout");
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+    }
     private void setProfileImages(View view){
         List<Photo> photos_list = CurrentUser.getInstance().getPhotos();
 
@@ -186,6 +209,9 @@ public class EditProfileFragment extends Fragment {
         });
 
         Switch genderSwitch = view.findViewById(R.id.genderSwitch);
+        String p_gend = CurrentUser.getInstance().getPerferredGender();
+        if(p_gend.equalsIgnoreCase("female")) genderSwitch.setChecked(true);
+        else genderSwitch.setChecked(false);
         genderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
             @Override
