@@ -7,9 +7,9 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="picture_size">70dp</dimen>
     <dimen name="main_profile_image_height">200dp</dimen>
-    <dimen name="main_profile_image_width">196dp</dimen>
-    <dimen name="secondary_profile_image_wdith">130dp</dimen>
+    <dimen name="main_profile_image_width">205dp</dimen>
+    <dimen name="secondary_profile_image_wdith">136.5dp</dimen>
     <dimen name="secondary_profile_image_height">120dp</dimen>
-    <dimen name="profile_image_secondary_margin_top">3dp</dimen>
+    <dimen name="profile_image_secondary_margin_top">1dp</dimen>
 
 </resources>
