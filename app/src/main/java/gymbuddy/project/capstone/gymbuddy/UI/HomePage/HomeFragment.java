@@ -1,9 +1,14 @@
 package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +22,9 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
@@ -208,6 +216,7 @@ public class HomeFragment extends Fragment {
                         CurrentUser user = CurrentUser.getInstance();
                         user.addToLikes(profile.getUser().getUserID());
                         fdbh.updateLikes(profile.getUser().getUserID());
+                        fdbh.updateUserLiked(profile.getUser().getUserID());
                         removeUserFromGroup(profile);
                     }
                 });

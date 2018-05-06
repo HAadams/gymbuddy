@@ -107,36 +107,17 @@ public class FirebaseDatabaseHelper {
     }
 
     private void setListeners(){
-        likesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
+
+        likedRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println("VALUE CHANGED YO "+dataSnapshot.getValue());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        likedRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("likedRef:Added", dataSnapshot.toString());
                 System.out.println(dataSnapshot.getValue());
+                for(String id: CurrentUser.getInstance().getLikes()){
+                    if(id.equalsIgnoreCase(dataSnapshot.getValue().toString())){
+                        updateFriends(id);
+                    }
+                }
             }
 
             @Override
@@ -159,6 +140,81 @@ public class FirebaseDatabaseHelper {
 
             }
         });
+
+        likesRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("likesRef:Added", dataSnapshot.toString());
+                System.out.println(dataSnapshot.getValue());
+                for(String id: CurrentUser.getInstance().getLiked()){
+                    if(id.equalsIgnoreCase(dataSnapshot.getValue().toString())){
+                        updateFriends(id);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        friendsRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot ds, String s) {
+                Log.d("friendsRef:Added", ds.toString());
+
+                usersRef.child(ds.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        CurrentUser.getInstance().addToFriends(
+                                ds.getValue().toString(),
+                                getUserFromSnapshot(dataSnapshot, ds.getValue().toString()));
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     public void setCurrentUserData(){
@@ -380,6 +436,7 @@ public class FirebaseDatabaseHelper {
         /*
         This method converts the DataSnapshot object to a user object.
         */
+        Log.d("getUserFromSnapshot()", u);
         User tmp_user;
         if(u.equals("current_user"))
             tmp_user = new CurrentUser();
@@ -454,10 +511,24 @@ public class FirebaseDatabaseHelper {
         return tmp_user;
     }
 
+    /***
+     * This function updates the current users likes list with the other user they swiped on.
+     * @param id
+     */
     public void updateLikes(String id){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
         likesRef.child(id).setValue(id);
+    }
+
+    /***
+     * This Function updates a different user's liked list with the current user's
+     * @param id
+     */
+    public void updateUserLiked(String id){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) return;
+        usersRef.child(id).child(LIKED).child(CurrentUser.getInstance().getUserID()).setValue(CurrentUser.getInstance().getUserID());
     }
 
     public void updateUnlikes(String id){
