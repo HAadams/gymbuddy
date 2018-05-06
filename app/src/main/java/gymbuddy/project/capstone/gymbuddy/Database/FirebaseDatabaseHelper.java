@@ -293,13 +293,18 @@ public class FirebaseDatabaseHelper {
                         continue;
                     // If user is on the current user's unlikes list, skip.
                     if(currentUser.getUnlikes().contains(user.getKey())) continue;
-                    // If current user already likes this person (exists in likes list), skip.
-                    if(currentUser.getLikes().contains(user.getKey())) continue;
                     // Get the new user
                     User u = getNewUser(user);
                     // If null, it means the user doesn't match the current user's criteria, skip.
                     if(u == null) continue;
                     Log.d("getUsersGroup()", "Adding user: "+u.getName());
+                    // If current user is friends with this person, skip
+                    if(currentUser.getFriends().containsKey(user.getKey())) {
+                        System.out.println("Adding to friends list " +  user.getKey());
+                        currentUser.addToFriends(user.getKey(), u);
+                        continue;
+                    }
+
                     Profile p = new Profile();
                     p.setUser(u);
                     users_from_database.add(p);
