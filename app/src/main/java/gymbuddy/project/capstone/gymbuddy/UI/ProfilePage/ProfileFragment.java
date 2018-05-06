@@ -2,19 +2,30 @@ package gymbuddy.project.capstone.gymbuddy.UI.ProfilePage;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.Photo;
 
 
 public class ProfileFragment extends Fragment {
@@ -71,7 +82,38 @@ public class ProfileFragment extends Fragment {
         age.setText(currentProfile.getAge());
         bio.setText(currentProfile.getBiography());
 
+        final List<Photo> photos = currentProfile.getPhotos();
 
+        viewPager.setAdapter(new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return photos.size();
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View itemView;
+
+
+                    itemView = layoutInflater.inflate(R.layout.pager_view_image, container, false);
+
+                     SimpleDraweeView v = itemView.findViewById(R.id.profilePicture);
+
+                    if (position < photos.size()) {
+                        Photo photo = photos.get(position);
+                        v.setImageURI(photo.getURL());
+                    }
+
+                container.addView(itemView);
+                return itemView;
+            }
+        });
 
 
         return rootview;

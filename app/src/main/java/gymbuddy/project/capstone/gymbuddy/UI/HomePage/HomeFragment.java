@@ -116,6 +116,8 @@ public class HomeFragment extends Fragment {
         });
         v.setImageURI(CurrentUser.getInstance().getPhotoURL());
 
+
+
         mSwipeView.getBuilder()
                 .setDisplayViewCount(5)
                 .setSwipeDecor(new SwipeDecor()
