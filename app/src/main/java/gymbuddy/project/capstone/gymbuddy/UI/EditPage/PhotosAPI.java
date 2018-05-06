@@ -24,7 +24,6 @@ public class PhotosAPI {
     private String album_content_url = "https://graph.facebook.com/album_id/photos?access_token=token_id";
 
     private JSONArray response;
-    public FirebaseDatabaseHelper firebaseDatabaseHelper;
     private boolean photosFetchComplete;
     private boolean albumsFetchComplete;
     private boolean errorOccured;
@@ -45,7 +44,6 @@ public class PhotosAPI {
         photosFetchComplete = false;
         errorOccured = false;
         albumsFetchComplete = false;
-        firebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         client = new SyncHttpClient();
     }
 
@@ -70,7 +68,7 @@ public class PhotosAPI {
                                 // For each picture ID returned in the json object, add it to the photos list
                                 for (int i = 0; i < response.length(); i++) {
                                     CurrentUser.getInstance().getAlbums().get(album_positionٍ).addPicture(
-                                            new Photo(response.getJSONObject(i).get(firebaseDatabaseHelper.ID).toString())
+                                            new Photo(response.getJSONObject(i).get(FirebaseDatabaseHelper.getInstance().ID).toString())
                                     );
                                 }
                                 photosFetchComplete = true;
@@ -107,8 +105,8 @@ public class PhotosAPI {
                                 JSONArray array = object.getJSONObject("albums").getJSONArray("data");
                                 for (int i = 0; i < array.length(); i++) {
                                     CurrentUser.getInstance().getAlbums().add(new Album(
-                                            array.getJSONObject(i).get(firebaseDatabaseHelper.ID).toString(),
-                                            array.getJSONObject(i).get(firebaseDatabaseHelper.NAME).toString()));
+                                            array.getJSONObject(i).get(FirebaseDatabaseHelper.getInstance().ID).toString(),
+                                            array.getJSONObject(i).get(FirebaseDatabaseHelper.getInstance().NAME).toString()));
 
                                 }
                                 albumsFetchComplete = true;

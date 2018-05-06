@@ -55,7 +55,10 @@ public class TinderCard {
     @Resolve
     private void onResolved(){
         if(mProfile == null) return;
-        Glide.with(mContext).load(mProfile.getUser().getPhotoURL()).into(profileImageView);
+        if(mProfile.getUser() == null) return;
+        try {
+            Glide.with(mContext).load(mProfile.getUser().getPhotoURL()).into(profileImageView);
+        }catch(Exception e){}
         nameAgeTxt.setText(mProfile.getUser().getName() + ", " + mProfile.getUser().getAge());
         Double distance = LocationHelper.distance(
                 Double.valueOf(CurrentUser.getInstance().getLatitude()),

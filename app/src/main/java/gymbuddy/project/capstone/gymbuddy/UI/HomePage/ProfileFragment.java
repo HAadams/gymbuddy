@@ -1,8 +1,6 @@
-package gymbuddy.project.capstone.gymbuddy.UI.ProfilePage;
+package gymbuddy.project.capstone.gymbuddy.UI.HomePage;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -21,7 +19,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
-import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
@@ -73,13 +70,19 @@ public class ProfileFragment extends Fragment {
         User currentProfile = null;
 
         for(Profile p: FirebaseDatabaseHelper.getInstance().users_from_database) {
-            System.out.println("IN LOOP: "+p.getUser().getName());
-            if (p.getUser().getUserID().equals(mParam1)) currentProfile = p.getUser();
+            System.out.println("IN LOOP: "+p.getUser().getUserID());
+            if (p.getUser().getUserID().equalsIgnoreCase(mParam1)) {
+                System.out.println("MATCH: "+p.getUser().getUserID() + " "+mParam1);
+                currentProfile = p.getUser();
+            }
         }
-        System.out.println("USER FORM DB: "+ currentProfile.getName());
+        System.out.println("PARAMS "+mParam1+" "+FirebaseDatabaseHelper.getInstance().users_from_database.size());
+        //System.out.println("USER FORM DB: "+ currentProfile.getName());
+        System.out.println("NAME: "+currentProfile.getUserID());
+        System.out.println("NAME: "+currentProfile.getName());
         name.setText(currentProfile.getName());
 
-        age.setText(currentProfile.getAge());
+        age.setText(currentProfile.getAge().toString());
         bio.setText(currentProfile.getBiography());
 
         final List<Photo> photos = currentProfile.getPhotos();

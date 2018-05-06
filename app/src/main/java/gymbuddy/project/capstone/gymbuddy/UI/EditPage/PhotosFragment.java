@@ -25,7 +25,6 @@ public class PhotosFragment extends Fragment implements OnListFragmentInteractio
     private static final String POSITION = "position";
     private static final String PROFILE_PIC_POSITION = "profile_pic_position";
 
-    private FirebaseDatabaseHelper fdbh;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
@@ -54,7 +53,6 @@ public class PhotosFragment extends Fragment implements OnListFragmentInteractio
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photos, container, false);
-        fdbh = FirebaseDatabaseHelper.getInstance();
 
         GridView gridView = view.findViewById(R.id.photosList_gridView);
         gridView.setAdapter(new PhotosSelectAdapter(getActivity(),

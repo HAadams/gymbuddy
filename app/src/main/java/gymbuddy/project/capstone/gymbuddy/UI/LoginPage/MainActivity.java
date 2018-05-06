@@ -257,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
 
     private static class AsyncUsersDataFetcher extends AsyncTask<Void, Void, Void>{
         NetworkCallbackListener nListener;
-        FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         AsyncUsersDataFetcher(NetworkCallbackListener nListener){
             this.nListener = nListener;
         }
@@ -269,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
 
             // Wait until users are pulled from database to show on homepage
             FirebaseDatabaseHelper.getInstance().getUsersGroup();
-            while(!(fdbh.isUsersFetchComplete() && fdbh.isCurrentUserUpdateComplete()));
+            while(!(FirebaseDatabaseHelper.getInstance().isUsersFetchComplete() && FirebaseDatabaseHelper.getInstance().isCurrentUserUpdateComplete()));
 
             return null;
         }
@@ -277,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            fdbh.setFlags(true, false, false);
+            FirebaseDatabaseHelper.getInstance().setFlags(true, false, false);
             nListener.onUsersDataDownloaded();
 
         }

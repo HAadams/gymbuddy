@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,20 +17,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Locale;
 
-import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 import gymbuddy.project.capstone.gymbuddy.UI.EditPage.EditProfileFragment;
-import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MapPage.MapActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.MessageFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.OnListInteractionListener;
-import gymbuddy.project.capstone.gymbuddy.UI.ProfilePage.ProfileFragment;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, OnListInteractionListener{
 
@@ -143,12 +135,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fragmentTransaction.replace(R.id.homeFragmentContainer, ProfileFragment.newInstance(user.getUserID(),user.getName())).addToBackStack(null);
 
         fragmentTransaction.commit();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        System.out.println("I AM IN onSTOP");
     }
 
     @Override

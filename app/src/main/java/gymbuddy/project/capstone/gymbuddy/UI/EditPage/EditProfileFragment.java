@@ -193,10 +193,9 @@ public class EditProfileFragment extends Fragment {
         SeekBar distanceSeekBar = view.findViewById(R.id.distanceSeekbar);
         distanceSeekBar.setProgress(CurrentUser.getInstance().getPerferredDistance());
         distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                fdbh.updatePreferredDistance(i);
+                FirebaseDatabaseHelper.getInstance().updatePreferredDistance(i);
                 TextView distance = view.findViewById(R.id.distanceTextView);
                 distance.setText(String.valueOf(i)+" miles");
             }
@@ -217,15 +216,14 @@ public class EditProfileFragment extends Fragment {
         if(p_gend.equalsIgnoreCase("female")) genderSwitch.setChecked(true);
         else genderSwitch.setChecked(false);
         genderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b) {
-                    fdbh.updatePreferredGender("female");
+                    FirebaseDatabaseHelper.getInstance().updatePreferredGender("female");
                     CurrentUser.getInstance().setPerferredGender("female");
                 }
                 if(!b) {
-                    fdbh.updatePreferredGender("male");
+                    FirebaseDatabaseHelper.getInstance().updatePreferredGender("male");
                     CurrentUser.getInstance().setPerferredGender("male");
 
                 }
