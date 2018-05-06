@@ -286,6 +286,7 @@ public class FirebaseDatabaseHelper {
 
                 // This iterates over the list of users
                 for(DataSnapshot user: dataSnapshot.getChildren()){
+                    if(existsInList(user.getKey())) continue;
                     currentUser = CurrentUser.getInstance();
                     // user.getKey() returns the USER_ID
                     // If user is current user, skip.
@@ -317,6 +318,12 @@ public class FirebaseDatabaseHelper {
                 usersFetchComplete = false;
             }
         });
+    }
+
+    private boolean existsInList(String id){
+        for(Profile p:users_from_database)
+            if(p.getUser().getUserID().equalsIgnoreCase(id)) return true;
+        return false;
     }
 
     private User getNewUser(DataSnapshot user){
