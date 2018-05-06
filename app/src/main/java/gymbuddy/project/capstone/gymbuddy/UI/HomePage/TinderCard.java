@@ -20,6 +20,7 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Map.LocationHelper;
 import gymbuddy.project.capstone.gymbuddy.R;
 
@@ -56,7 +57,15 @@ public class TinderCard {
         if(mProfile == null) return;
         Glide.with(mContext).load(mProfile.getUser().getPhotoURL()).into(profileImageView);
         nameAgeTxt.setText(mProfile.getUser().getName() + ", " + mProfile.getUser().getAge());
-        locationNameTxt.setText(LocationHelper.getLocality(mContext, mProfile.getUser()));
+        Double distance = LocationHelper.distance(
+                Double.valueOf(CurrentUser.getInstance().getLatitude()),
+                Double.valueOf(CurrentUser.getInstance().getLongitude()),
+                Double.valueOf(mProfile.getUser().getLatitude()),
+                Double.valueOf(mProfile.getUser().getLongitude()),
+                "M");
+        String away = "" + Math.floor(distance) + " miles away";
+        locationNameTxt.setText(away);
+        //locationNameTxt.setText(LocationHelper.getLocality(mContext, mProfile.getUser()));
     }
 
     @Click(R.id.tinderCard)

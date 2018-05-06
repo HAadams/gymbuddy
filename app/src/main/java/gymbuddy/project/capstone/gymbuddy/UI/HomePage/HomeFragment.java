@@ -111,14 +111,13 @@ public class HomeFragment extends Fragment {
         mSwipeView.getBuilder()
                 .setDisplayViewCount(5)
                 .setSwipeDecor(new SwipeDecor()
-                        .setPaddingTop(0)
+                        .setPaddingTop(20)
                         .setRelativeScale(0.01f)
                         .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
         mSwipeView.undoLastSwipe();
         mSwipeView.removeAllViews();
         populateSwipeView();
-        System.out.println("after adding shit");
         rootView.findViewById(R.id.homeMapButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

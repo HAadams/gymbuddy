@@ -235,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements NetworkCallbackLi
                             if(FirebaseDatabaseHelper.getInstance().isFirstLogin(mContext)) {
                                 // Get the current user's information and upload to database
                                 updateUserData();
-                                if(FirebaseDatabaseHelper.getInstance().isFirstLogin(mContext))
-                                    FirebaseDatabaseHelper.getInstance().saveFirstLoginState(mContext, false);
+                                //if(FirebaseDatabaseHelper.getInstance().isFirstLogin(mContext))
+                                FirebaseDatabaseHelper.getInstance().saveFirstLoginState(mContext, false);
                             }
 
                             startUsersDataFetcher();
