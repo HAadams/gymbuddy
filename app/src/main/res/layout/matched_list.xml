@@ -4,11 +4,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardCornerRadius="30dp">
+    card_view:cardCornerRadius="38dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/simpleView2"
-        android:layout_width="61dp"
-        android:layout_height="59dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:src="@drawable/com_facebook_button_icon_blue" />
 </android.support.v7.widget.CardView>
