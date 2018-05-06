@@ -309,7 +309,7 @@
             android:background="#f5f5f5"
             android:ems="10"
             android:gravity="top"
-            android:inputType="textMultiLine"
+            android:inputType=""
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
             android:textSize="6pt"
