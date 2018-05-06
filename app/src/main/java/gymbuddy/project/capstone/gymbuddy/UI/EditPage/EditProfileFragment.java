@@ -8,12 +8,15 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -76,6 +79,7 @@ public class EditProfileFragment extends Fragment {
         });
         setProfileImages(view);
         setProfilePreferences(view);
+        setProfileBiography(view);
         return view;
     }
     private void startMainActivity(){
@@ -243,5 +247,25 @@ public class EditProfileFragment extends Fragment {
         });
 
 
+    }
+    private void setProfileBiography(View view){
+        EditText biography = view.findViewById(R.id.biographyEditText);
+        biography.setText(CurrentUser.getInstance().getBiography());
+        biography.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                FirebaseDatabaseHelper.getInstance().updateUserBiography(editable.toString());
+            }
+        });
     }
 }

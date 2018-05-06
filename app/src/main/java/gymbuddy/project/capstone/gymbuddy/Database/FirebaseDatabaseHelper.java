@@ -54,6 +54,7 @@ public class FirebaseDatabaseHelper {
     private static final String OTHER = "other";
     private static final String LOGIN_STATE = "login_state_gymbuddy";
 
+    public final String BIOGRAPHY = "biography";
     public final String GENDER = "gender";
     public final String BIRTHDAY = "birthday";
     public final String LATITUDE = "latitude";
@@ -282,6 +283,9 @@ public class FirebaseDatabaseHelper {
         for(DataSnapshot info: user.getChildren()){
             Log.d("getNewUser() User Info", info.getKey());
             switch(info.getKey()){
+                case BIOGRAPHY:
+                    n.setBiography(info.getValue().toString());
+                    break;
                 case PHOTOS:
                     for(DataSnapshot photo: info.getChildren())
                         n.setPhotos(Integer.parseInt(photo.getKey()), photo.getValue().toString());
@@ -384,6 +388,9 @@ public class FirebaseDatabaseHelper {
 
         for(DataSnapshot info: user.getChildren()){
             switch(info.getKey()){
+                case BIOGRAPHY:
+                    tmp_user.setBiography(info.getValue().toString());
+                    break;
                 case PHOTOS:
                     for(DataSnapshot photo: info.getChildren())
                         tmp_user.setPhotos(Integer.parseInt(photo.getKey()), photo.getValue().toString());
@@ -483,6 +490,10 @@ public class FirebaseDatabaseHelper {
         return prefs.getBoolean(LOGIN_STATE, true);
     }
 
+    public void updateUserBiography(String biography){
+        Firebase bioRef = usersRef.child(CurrentUser.getInstance().getUserID()).child(BIOGRAPHY);
+        bioRef.setValue(biography);
+    }
     public void updateLatitudeLocation(Double latitude){
         CurrentUser currentUser = CurrentUser.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -553,6 +564,7 @@ public class FirebaseDatabaseHelper {
         currentUserRef.child(MIN_AGE).setValue(minAge);
         currentUserRef.child(MAX_AGE).setValue(maxAge);
     }
+
     public void setDefaultUserSearchSettings(){
         CurrentUser currentUser = CurrentUser.getInstance();
         String perferred_gender;

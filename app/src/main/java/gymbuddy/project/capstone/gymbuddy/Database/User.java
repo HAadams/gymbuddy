@@ -28,7 +28,9 @@ public class User {
 
 
     private String birthday;
+    private String biography;
     private Integer age;
+
     private Integer minAge;
     private Integer maxAge;
     private String  perferredGender;
@@ -158,6 +160,14 @@ public class User {
         photos = new ArrayList<>(MAX_PROFILE_PHOTOS_NUMBER);
         for(int i=0; i<MAX_PROFILE_PHOTOS_NUMBER; i++)
             photos.add(new Photo());
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
 
     public List<Photo> getPhotos() {
