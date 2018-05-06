@@ -78,8 +78,10 @@ public class MessageFragment extends Fragment {
         RecyclerView rView = view.findViewById(R.id.list);
         RecyclerView navRV = view.findViewById(R.id.recyclerView);
 
-       //todo users = get users that you have already started talking to
-        users.add(CurrentUser.getInstance());
+        for(User user: CurrentUser.getInstance().getFriends().values()) {
+            users.add(user);
+        }
+
 
 
 
@@ -96,24 +98,10 @@ public class MessageFragment extends Fragment {
 
 
             recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
-
-            List<User> navTopics = new ArrayList<>();
-            navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());
-        navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());navTopics.add(CurrentUser.getInstance());
-
-
-
-
+             List<User> navTopics = new ArrayList<>();
+            for(User user: CurrentUser.getInstance().getFriends().values()) {
+                navTopics.add(user);
+            }
             navRV.setAdapter(new MatchedRecyclerViewAdapter(navTopics, mListener));
 
         return view;
