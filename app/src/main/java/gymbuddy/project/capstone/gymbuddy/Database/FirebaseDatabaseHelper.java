@@ -301,7 +301,7 @@ public class FirebaseDatabaseHelper {
                     Log.d("getUsersGroup()", "Adding user: "+u.getName());
                     // If current user is friends with this person, skip
                     if(currentUser.getFriends().containsKey(user.getKey())) {
-                        System.out.println("Adding to friends list " +  user.getKey());
+                        Log.d("adding to friends: ","Adding to friends list " +  user.getKey());
                         currentUser.addToFriends(user.getKey(), u);
                         continue;
                     }
@@ -444,7 +444,6 @@ public class FirebaseDatabaseHelper {
     }
 
     private User getUserFromSnapshot(DataSnapshot user, String u){
-
         /*
         This method converts the DataSnapshot object to a user object.
         */
