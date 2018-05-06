@@ -263,6 +263,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 FirebaseDatabaseHelper.getInstance().updateUserBiography(editable.toString());
+                CurrentUser.getInstance().setBiography(editable.toString());
             }
         });
     }
