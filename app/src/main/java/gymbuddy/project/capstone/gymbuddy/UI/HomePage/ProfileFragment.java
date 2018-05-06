@@ -99,6 +99,11 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
+            public void destroyItem(View container, int position, Object object) {
+                ((ViewPager) container).removeView((View) object);
+            }
+
+            @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View itemView;
