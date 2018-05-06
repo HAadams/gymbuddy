@@ -27,6 +27,7 @@ import gymbuddy.project.capstone.gymbuddy.UI.LoginPage.MainActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MapPage.MapActivity;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.MessageFragment;
 import gymbuddy.project.capstone.gymbuddy.UI.MessagePage.OnListInteractionListener;
+import gymbuddy.project.capstone.gymbuddy.UI.ProfilePage.ProfileFragment;
 
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, OnListInteractionListener{
 
@@ -111,6 +112,17 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         Intent intent = new Intent(HomeActivity.this, MapActivity.class);
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onUserProfilePressed(User user) {
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.setCustomAnimations(R.anim.exit_r, R.anim.enter_r, R.anim.pop_exit_r, R.anim.pop_enter_r);
+
+        fragmentTransaction.replace(R.id.homeFragmentContainer, ProfileFragment.newInstance(user.getUserID(),user.getName())).addToBackStack(null);
+
+        fragmentTransaction.commit();
     }
 
     @Override

@@ -162,6 +162,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    public void onUserProfileButtonPressed(User user) {
+        if (mListener != null) {
+            mListener.onUserProfilePressed(user);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -181,8 +186,7 @@ public class HomeFragment extends Fragment {
                 TinderCard tc = new TinderCard(mContext, profile, mSwipeView, new cardTapToProfileCallback() {
                     @Override
                     public void onTap(Profile profile) {
-                        Toast.makeText(getContext(),"tap for dat ass: " + profile.getUser().getName(),
-                                Toast.LENGTH_SHORT).show();
+                        onUserProfileButtonPressed(profile.getUser());
                     }
 
                     @Override
@@ -233,5 +237,7 @@ public class HomeFragment extends Fragment {
         void onMessengerFragmentInteraction();
 
         void onMapFragmentInteraction();
+
+        void onUserProfilePressed(User user);
     }
 }

@@ -1,90 +1,55 @@
 package gymbuddy.project.capstone.gymbuddy.UI.MapPage;
 
+import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
+import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends FragmentActivity implements com.google.android.gms.maps.OnMapReadyCallback {
 
-    private MapView mapView;
+    Context context;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Mapbox.getInstance(this, "pk.eyJ1IjoiYXJoYW0zNjAiLCJhIjoiY2plY3MyZ2JzMHRkdjJ3bGEwNXZmZnFiaCJ9.EuiqYYYy6rkPVc7o1vQUpQ");
+        context = this;
 
-        mapView = findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-
-                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(Double.valueOf(CurrentUser.getInstance().getLatitude()), Double.valueOf(CurrentUser.getInstance().getLongitude())),16));
-
-                mapboxMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(Double.valueOf(CurrentUser.getInstance().getLatitude()), Double.valueOf(CurrentUser.getInstance().getLongitude())))
-                        .title("My location")
-                );
-
-            }
-        });
-
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
+        double lat = Double.valueOf(CurrentUser.getInstance().getLatitude());
+        double lon = Double.valueOf(CurrentUser.getInstance().getLongitude());
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
+        LatLng currentLocation = new LatLng(lat, lon);
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Your location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
+        for(User user : CurrentUser.getInstance().getFriends().values()){
+            double latitude = Double.valueOf(user.getLatitude());
+            double longitude = Double.valueOf(user.getLongitude());
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
+            LatLng friendLocation = new LatLng(latitude, longitude);
+            mMap.addMarker(new MarkerOptions().position(friendLocation).title(user.getName()));
+        }
     }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
 
 }
