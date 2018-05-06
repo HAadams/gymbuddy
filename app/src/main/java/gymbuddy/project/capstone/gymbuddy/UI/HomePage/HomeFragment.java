@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        FirebaseDatabaseHelper.getInstance().users_from_database.clear();
+        //FirebaseDatabaseHelper.getInstance().users_from_database.clear();
         FirebaseDatabaseHelper.getInstance().getUsersGroup();
         System.out.println("onStop HomeFragment");
         mSwipeView.removeAllViews();
@@ -191,6 +191,7 @@ public class HomeFragment extends Fragment {
         if (mSwipeView!=null) {
             for (Profile profile : FirebaseDatabaseHelper.getInstance().users_from_database) {
                 if(profile == null) continue;
+                if(profile.getUser() == null) continue;
                 TinderCard tc = new TinderCard(mContext, profile, mSwipeView, new cardTapToProfileCallback() {
                     @Override
                     public void onTap(Profile profile) {
@@ -205,7 +206,7 @@ public class HomeFragment extends Fragment {
                         CurrentUser user = CurrentUser.getInstance();
                         user.addToUnlikes(profile.getUser().getUserID());
                         fdbh.updateUnlikes(profile.getUser().getUserID());
-                        removeUserFromGroup(profile);
+                        //removeUserFromGroup(profile);
                     }
 
                     @Override
@@ -217,15 +218,17 @@ public class HomeFragment extends Fragment {
                         user.addToLikes(profile.getUser().getUserID());
                         fdbh.updateLikes(profile.getUser().getUserID());
                         fdbh.updateUserLiked(profile.getUser().getUserID());
-                        removeUserFromGroup(profile);
+                        //removeUserFromGroup(profile);
                     }
                 });
                 mSwipeView.addView(tc);
             }
         }
+        System.out.println("SIZE OF LIST: "+FirebaseDatabaseHelper.getInstance().users_from_database.size());
     }
 
     public void removeUserFromGroup(Profile user){
+        Log.d("removeUserFromGroup", user.getUser().getUserID());
         FirebaseDatabaseHelper fdbh = FirebaseDatabaseHelper.getInstance();
         for (int i=0; i<fdbh.users_from_database.size(); i++){
             if(user.getUser().getUserID().equalsIgnoreCase(fdbh.users_from_database.get(i).getUser().getUserID()))

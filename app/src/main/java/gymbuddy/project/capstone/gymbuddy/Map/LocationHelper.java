@@ -48,8 +48,6 @@ public class LocationHelper implements android.location.LocationListener{
 
     private Activity activity;
 
-    private FirebaseDatabaseHelper firebaseDatabaseHelper;
-
     // flag for GPS status
     private boolean GPSEnabled = false;
 
@@ -72,14 +70,13 @@ public class LocationHelper implements android.location.LocationListener{
 
     private LocationHelper(Activity activity){
         this.activity = activity;
-        firebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         locationManager = (LocationManager) activity.getSystemService(LOCATION_SERVICE);
     }
 
     private void setUserLocationInDB(){
-        firebaseDatabaseHelper.updateLatitudeLocation(latitude);
-        firebaseDatabaseHelper.updateLongitudeLocation(longitude);
-        firebaseDatabaseHelper.updateAltitudeLocation(altitude);
+        FirebaseDatabaseHelper.getInstance().updateLatitudeLocation(latitude);
+        FirebaseDatabaseHelper.getInstance().updateLongitudeLocation(longitude);
+        FirebaseDatabaseHelper.getInstance().updateAltitudeLocation(altitude);
     }
 
     public Location updateUserLocation() {
