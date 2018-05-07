@@ -116,6 +116,7 @@ public class FirebaseDatabaseHelper {
                 for(String id: CurrentUser.getInstance().getLikes()){
                     if(id.equalsIgnoreCase(dataSnapshot.getValue().toString())){
                         updateFriends(id);
+                        usersRef.child(id).child(FRIENDS).child(CurrentUser.getInstance().getUserID()).setValue(CurrentUser.getInstance().getUserID());
                     }
                 }
             }
