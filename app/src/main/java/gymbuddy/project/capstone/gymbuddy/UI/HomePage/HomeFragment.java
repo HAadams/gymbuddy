@@ -193,7 +193,7 @@ public class HomeFragment extends Fragment {
                         CurrentUser user = CurrentUser.getInstance();
                         user.addToUnlikes(profile.getUser().getUserID());
                         fdbh.updateUnlikes(profile.getUser().getUserID());
-                        //removeUserFromGroup(profile);
+                        removeUserFromGroup(profile);
                     }
 
                     @Override
@@ -205,7 +205,7 @@ public class HomeFragment extends Fragment {
                         user.addToLikes(profile.getUser().getUserID());
                         fdbh.updateLikes(profile.getUser().getUserID());
                         fdbh.updateUserLiked(profile.getUser().getUserID());
-                        //removeUserFromGroup(profile);
+                        removeUserFromGroup(profile);
                     }
                 });
                 mSwipeView.addView(tc);
