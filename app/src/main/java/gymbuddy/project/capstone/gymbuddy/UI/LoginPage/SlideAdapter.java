@@ -42,9 +42,9 @@ public class SlideAdapter extends PagerAdapter {
 
     public String[] slide_summary = {
 
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+            "Fitness is essential for our health, but doing it alone can be lonesome",
+            "Find People near you who are as motivated about living a healthy lifestyle as you are.",
+            "Join a community of supportive people and reach your fitness goals! "
 
     };
 
