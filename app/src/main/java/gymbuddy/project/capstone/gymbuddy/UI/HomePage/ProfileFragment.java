@@ -19,6 +19,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 import gymbuddy.project.capstone.gymbuddy.Adapters.Profile;
+import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.FirebaseDatabaseHelper;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
@@ -70,16 +71,19 @@ public class ProfileFragment extends Fragment {
         User currentProfile = null;
 
         for(Profile p: FirebaseDatabaseHelper.getInstance().users_from_database) {
-            System.out.println("IN LOOP: "+p.getUser().getUserID());
             if (p.getUser().getUserID().equalsIgnoreCase(mParam1)) {
-                System.out.println("MATCH: "+p.getUser().getUserID() + " "+mParam1);
                 currentProfile = p.getUser();
+                break;
             }
         }
-        System.out.println("PARAMS "+mParam1+" "+FirebaseDatabaseHelper.getInstance().users_from_database.size());
-        //System.out.println("USER FORM DB: "+ currentProfile.getName());
-        System.out.println("NAME: "+currentProfile.getUserID());
-        System.out.println("NAME: "+currentProfile.getName());
+        if(currentProfile == null) {
+            for (User u : CurrentUser.getInstance().getFriends().values()) {
+                if (u.getUserID().equalsIgnoreCase(mParam1)) {
+                    currentProfile = u;
+                    break;
+                }
+            }
+        }
         name.setText(currentProfile.getName());
 
         age.setText(currentProfile.getAge().toString());

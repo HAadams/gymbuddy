@@ -117,7 +117,11 @@ public class MessageFragment extends Fragment {
 
             @Override
             public void onNavListFragmentInteraction(User item) {
+                fragmentTransaction = fragmentManager.beginTransaction();
 
+                fragmentTransaction.replace(R.id.homeFragmentContainer, ProfileFragment.newInstance(item.getUserID(),item.getName())).addToBackStack(null);
+
+                fragmentTransaction.commit();
             }
         };
 
