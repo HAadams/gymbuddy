@@ -7,4 +7,16 @@
     <color name="colorAccent">#ba000d</color>
     <color name="colorGrey">#999496</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorBack">#FFFFFF</color>
+    <color name="c0">#FF5722</color>
+    <color name="c1">#03A9F4</color>
+    <color name="c2">#CDDC39</color>
+    <color name="c3">#FFC107</color>
+    <color name="c4">#8BC34A</color>
+    <color name="c5">#00BCD4</color>
+    <color name="c6">#FFEB3B</color>
+    <color name="c7">#4CAF50</color>
+    <color name="c8">#FF9800</color>
+    <color name="c9">#2196F3</color>
+    <color name="c10">#9E9E9E</color>
 </resources>

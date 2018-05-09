@@ -3,6 +3,8 @@ package gymbuddy.project.capstone.gymbuddy.UI.MessagePage;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,8 @@ import java.util.List;
 import gymbuddy.project.capstone.gymbuddy.Database.CurrentUser;
 import gymbuddy.project.capstone.gymbuddy.Database.User;
 import gymbuddy.project.capstone.gymbuddy.R;
+import gymbuddy.project.capstone.gymbuddy.UI.EditPage.PhotoZoomFragment;
+import gymbuddy.project.capstone.gymbuddy.UI.HomePage.ProfileFragment;
 
 public class MessageFragment extends Fragment {
 
@@ -29,6 +33,8 @@ public class MessageFragment extends Fragment {
     private int mColumnCount = 1;
     private int mID;
     private String mTitle;
+    FragmentTransaction fragmentTransaction;
+    FragmentManager fragmentManager;
 
     private OnListInteractionListener mListener;
 
@@ -85,24 +91,40 @@ public class MessageFragment extends Fragment {
 
 
 
-            final Context context = view.getContext();
+        final Context context = view.getContext();
 
-            RecyclerView recyclerView = (RecyclerView) rView;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                navRV.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
-                //setting horizontal linear layout and reversing the list so the recyclerview scrolls to the end
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        RecyclerView recyclerView = (RecyclerView) rView;
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            navRV.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
+            //setting horizontal linear layout and reversing the list so the recyclerview scrolls to the end
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
+        fragmentManager = getActivity().getSupportFragmentManager();
+
+        mListener = new OnListInteractionListener() {
+            @Override
+            public void onListFragmentInteraction(User mItem) {
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.homeFragmentContainer,
+                        ChatFragment.newInstance(mItem.getUserID())).addToBackStack(null);
+                fragmentTransaction.commit();
+
             }
 
+            @Override
+            public void onNavListFragmentInteraction(User item) {
 
-            recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
-             List<User> navTopics = new ArrayList<>();
-            for(User user: CurrentUser.getInstance().getFriends().values()) {
-                navTopics.add(user);
             }
-            navRV.setAdapter(new MatchedRecyclerViewAdapter(navTopics, mListener));
+        };
+
+        recyclerView.setAdapter(new MessageRecyclerViewAdapter(users, mListener));
+         List<User> navTopics = new ArrayList<>();
+        for(User user: CurrentUser.getInstance().getFriends().values()) {
+            navTopics.add(user);
+        }
+        navRV.setAdapter(new MatchedRecyclerViewAdapter(navTopics, mListener));
 
         return view;
     }
