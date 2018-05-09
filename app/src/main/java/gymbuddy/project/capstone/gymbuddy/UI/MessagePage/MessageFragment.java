@@ -86,6 +86,8 @@ public class MessageFragment extends Fragment {
 
         for(User user: CurrentUser.getInstance().getFriends().values()) {
             users.add(user);
+            System.out.println("USERS ID from LISTENER: "+user.getUserID());
+
         }
 
 

@@ -295,17 +295,19 @@ public class FirebaseDatabaseHelper {
                         continue;
                     // If user is on the current user's unlikes list, skip.
                     if(currentUser.getUnlikes().contains(user.getKey())) continue;
+
+                    if(currentUser.getFriends().containsKey(user.getKey())) {
+                        Log.d("adding to friends: ","Adding to friends list " +  user.getKey());
+                        currentUser.addToFriends(user.getKey(), getUserFromSnapshot(user, user.getKey()));
+                        continue;
+                    }
+
                     // Get the new user
                     User u = getNewUser(user);
                     // If null, it means the user doesn't match the current user's criteria, skip.
                     if(u == null) continue;
                     Log.d("getUsersGroup()", "Adding user: "+u.getName());
                     // If current user is friends with this person, skip
-                    if(currentUser.getFriends().containsKey(user.getKey())) {
-                        Log.d("adding to friends: ","Adding to friends list " +  user.getKey());
-                        currentUser.addToFriends(user.getKey(), u);
-                        continue;
-                    }
 
                     Profile p = new Profile();
                     p.setUser(u);
@@ -454,7 +456,7 @@ public class FirebaseDatabaseHelper {
             tmp_user = new CurrentUser();
         else
             tmp_user = new User();
-
+        tmp_user.setUserID(user.getKey());
         for(DataSnapshot info: user.getChildren()){
             switch(info.getKey()){
                 case BIOGRAPHY:

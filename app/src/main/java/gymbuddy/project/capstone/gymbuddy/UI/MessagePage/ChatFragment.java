@@ -77,7 +77,8 @@ public class ChatFragment extends Fragment {
                 .child("Messages")
                 .child(user_id)
                 .child(CurrentUser.getInstance().getUserID());
-
+        System.out.println("USERS ID: "+user_id);
+        System.out.println("MY ID: "+CurrentUser.getInstance().getUserID());
         Button btn = view.findViewById(R.id.sendMessageButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
